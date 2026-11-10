@@ -1,0 +1,194 @@
+{
+  "serie": {
+    "codigo": 433,
+    "nome": "Índice nacional de preços ao consumidor-amplo (IPCA)",
+    "unidade": "Var. % mensal",
+    "origem": "IBGE",
+    "fonte": "Banco Central do Brasil - SGS (Sistema Gerenciador de Séries Temporais)",
+    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados?formato=json&dataInicial=01/01/2023&dataFinal=10/11/2026",
+    "licenca": "ODbL (Open Database License) - exige citação da fonte"
+  },
+  "extraido_em": "2026-11-10T20:25:11-03:00",
+  "dados": [
+    {
+      "data": "2023-01",
+      "valor": 0.53
+    },
+    {
+      "data": "2023-02",
+      "valor": 0.84
+    },
+    {
+      "data": "2023-03",
+      "valor": 0.71
+    },
+    {
+      "data": "2023-04",
+      "valor": 0.61
+    },
+    {
+      "data": "2023-05",
+      "valor": 0.23
+    },
+    {
+      "data": "2023-06",
+      "valor": -0.08
+    },
+    {
+      "data": "2023-07",
+      "valor": 0.12
+    },
+    {
+      "data": "2023-08",
+      "valor": 0.23
+    },
+    {
+      "data": "2023-09",
+      "valor": 0.26
+    },
+    {
+      "data": "2023-10",
+      "valor": 0.24
+    },
+    {
+      "data": "2023-11",
+      "valor": 0.28
+    },
+    {
+      "data": "2023-12",
+      "valor": 0.56
+    },
+    {
+      "data": "2024-01",
+      "valor": 0.42
+    },
+    {
+      "data": "2024-02",
+      "valor": 0.83
+    },
+    {
+      "data": "2024-03",
+      "valor": 0.16
+    },
+    {
+      "data": "2024-04",
+      "valor": 0.38
+    },
+    {
+      "data": "2024-05",
+      "valor": 0.46
+    },
+    {
+      "data": "2024-06",
+      "valor": 0.21
+    },
+    {
+      "data": "2024-07",
+      "valor": 0.38
+    },
+    {
+      "data": "2024-08",
+      "valor": -0.02
+    },
+    {
+      "data": "2024-09",
+      "valor": 0.44
+    },
+    {
+      "data": "2024-10",
+      "valor": 0.56
+    },
+    {
+      "data": "2024-11",
+      "valor": 0.39
+    },
+    {
+      "data": "2024-12",
+      "valor": 0.52
+    },
+    {
+      "data": "2025-01",
+      "valor": 0.16
+    },
+    {
+      "data": "2025-02",
+      "valor": 1.31
+    },
+    {
+      "data": "2025-03",
+      "valor": 0.56
+    },
+    {
+      "data": "2025-04",
+      "valor": 0.43
+    },
+    {
+      "data": "2025-05",
+      "valor": 0.26
+    },
+    {
+      "data": "2025-06",
+      "valor": 0.24
+    },
+    {
+      "data": "2025-07",
+      "valor": 0.26
+    },
+    {
+      "data": "2025-08",
+      "valor": -0.11
+    },
+    {
+      "data": "2025-09",
+      "valor": 0.48
+    },
+    {
+      "data": "2025-10",
+      "valor": 0.09
+    },
+    {
+      "data": "2025-11",
+      "valor": 0.18
+    },
+    {
+      "data": "2025-12",
+      "valor": 0.33
+    },
+    {
+      "data": "2026-01",
+      "valor": 0.33
+    },
+    {
+      "data": "2026-02",
+      "valor": 0.7
+    },
+    {
+      "data": "2026-03",
+      "valor": 0.88
+    },
+    {
+      "data": "2026-04",
+      "valor": 0.67
+    },
+    {
+      "data": "2026-05",
+      "valor": 0.58
+    },
+    {
+      "data": "2026-06",
+      "valor": 0.16
+    },
+    {
+      "data": "2026-07",
+      "valor": 0.07
+    },
+    {
+      "data": "2026-08",
+      "valor": -0.32
+    },
+    {
+      "data": "2026-09",
+      "valor": 0.82
+    }
+  ]
+}

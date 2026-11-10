@@ -1,0 +1,7 @@
+# Cache do Python (gerado automaticamente)
+__pycache__/
+*.pyc
+# Arquivo temporário do script (só existe durante a gravação)
+*.tmp
+# Pasta montada pelo GitHub Actions para publicar o site
+_site/
