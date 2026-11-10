@@ -1,0 +1,76 @@
+# Rotina diária: baixa os dados, grava no repositório e publica o site.
+name: Atualizar dados e publicar site
+
+on:
+  schedule:
+    # Todo dia às 12:00 UTC (= 09:00 em Brasília). O horário do cron é sempre UTC.
+    - cron: "0 12 * * *"
+  workflow_dispatch:   # cria um botão "Run workflow" para rodar na mão
+  push:
+    branches: [main]   # publica também quando você muda o código
+
+# Permissões que a rotina precisa:
+permissions:
+  contents: write   # fazer commit do JSON atualizado
+  pages: write      # publicar no GitHub Pages
+  id-token: write   # exigido pela Action oficial de publicação
+
+# Evita duas execuções ao mesmo tempo brigando pelo mesmo commit.
+concurrency:
+  group: atualizar
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código do repositório
+        uses: actions/checkout@v7
+
+      - name: Instalar Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Rodar o script do IPCA
+        # Se o script falhar, a rotina para aqui: nada é gravado nem publicado,
+        # e o site continua com os dados de ontem.
+        run: python scripts/coletar_ipca.py
+
+      - name: Gravar o resultado no repositório
+        # Grava todo dia (a data de extração sempre muda). Isso também
+        # mantém o repositório "ativo", e o GitHub não desliga o agendamento.
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "Nada mudou nos dados."
+          else
+            git commit -m "Dados atualizados em $(date -u +%Y-%m-%d)"
+            git pull --rebase   # caso alguém tenha feito push enquanto rodava
+            git push
+          fi
+
+      - name: Montar a pasta do site
+        # Publica só o necessário: a página e os dados (não os scripts).
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp -r data _site/
+
+      - name: Enviar a pasta do site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  publicar:
+    needs: atualizar          # só roda se o job anterior deu certo
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v5
