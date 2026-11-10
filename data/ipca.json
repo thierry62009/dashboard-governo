@@ -8,7 +8,7 @@
     "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados?formato=json&dataInicial=01/01/2023&dataFinal=10/11/2026",
     "licenca": "ODbL (Open Database License) - exige citação da fonte"
   },
-  "extraido_em": "2026-11-10T20:25:11-03:00",
+  "extraido_em": "2026-11-10T20:42:19-03:00",
   "dados": [
     {
       "data": "2023-01",
