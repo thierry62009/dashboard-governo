@@ -5,10 +5,10 @@
     "unidade": "Var. % mensal",
     "origem": "IBGE",
     "fonte": "Banco Central do Brasil - SGS (Sistema Gerenciador de Séries Temporais)",
-    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados?formato=json&dataInicial=01/01/2023&dataFinal=10/11/2026",
+    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados?formato=json&dataInicial=01/01/2023&dataFinal=11/11/2026",
     "licenca": "ODbL (Open Database License) - exige citação da fonte"
   },
-  "extraido_em": "2026-11-10T21:19:19-03:00",
+  "extraido_em": "2026-11-11T16:29:39-03:00",
   "dados": [
     {
       "data": "2023-01",
