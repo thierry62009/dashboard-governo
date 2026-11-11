@@ -3,104 +3,121 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard do Governo Federal</title>
-  <style>
-    /* Estilo mínimo: fonte do sistema, largura confortável para leitura */
-    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 0 auto;
-           padding: 16px; color: #1a1a1a; background: #fff; line-height: 1.5; }
-    .cartao { border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin: 16px 0; }
-    .valor { font-size: 2.5rem; font-weight: bold; margin: 0; }
-    .fonte { font-size: 0.85rem; color: #555; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border-bottom: 1px solid #eee; padding: 4px 8px; text-align: right; }
-    th:first-child, td:first-child { text-align: left; }
-    .erro { color: #b00020; }
-  </style>
+  <title>Painel do Governo Federal</title>
+  <meta name="description" content="Indicadores oficiais do governo federal desde 2023, com fonte e data de extração.">
+  <meta name="color-scheme" content="dark">
+
+  <!-- Fontes do Google Fonts: Archivo (títulos e números) e Manrope (texto) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600..800&family=Manrope:wght@400..700&display=swap">
+
+  <link rel="stylesheet" href="assets/estilo.css">
 </head>
 <body>
-  <h1>Dashboard do Governo Federal</h1>
-  <p>Indicadores oficiais desde janeiro de 2023.</p>
+  <!-- Link escondido que aparece com Tab: pula direto para o conteúdo -->
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 
-  <!-- Cartão do IPCA: o JavaScript abaixo preenche os campos vazios -->
-  <section class="cartao" id="ipca">
-    <h2 id="ipca-nome">IPCA</h2>
-    <p class="valor" id="ipca-valor">carregando…</p>
-    <p id="ipca-mes"></p>
-    <p class="fonte" id="ipca-fonte"></p>
-    <details>
-      <summary>Ver todos os meses</summary>
-      <table>
-        <thead><tr><th>Mês</th><th>Variação (%)</th></tr></thead>
-        <tbody id="ipca-tabela"></tbody>
-      </table>
-    </details>
-  </section>
+  <!-- 1. CABEÇALHO -->
+  <header class="cabecalho">
+    <div class="limite cabecalho-linha">
+      <a class="marca" href="#">
+        <span class="marca-barra" aria-hidden="true"></span>Painel do Governo Federal
+      </a>
+      <nav aria-label="Seções da página">
+        <ul class="menu">
+          <li><a href="#indicadores">Indicadores</a></li>
+          <li><a href="#noticias">Notícias</a></li>
+          <li><a href="#resumo">Resumo do período</a></li>
+          <li><a href="#fontes">Fontes</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-  <script>
-    // Converte "2026-09" em "setembro de 2026".
-    // Usamos new Date(ano, mês-1, 1) para evitar erro de fuso horário.
-    function nomeDoMes(aaaaMm) {
-      const [ano, mes] = aaaaMm.split("-").map(Number);
-      return new Date(ano, mes - 1, 1).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
-    }
+  <main id="conteudo">
+    <!-- 2. ABERTURA -->
+    <section class="abertura">
+      <div class="limite">
+        <p class="etiqueta">Mandato 2023 a 2026 · Dados oficiais</p>
+        <h1>Indicadores do governo federal, direto das fontes oficiais</h1>
+        <p class="apoio">Dados do Banco Central e do IBGE desde 1º de janeiro de 2023,
+          atualizados todos os dias, com série, data de extração e link em cada número.</p>
+        <!-- "Atualizado em" vem do campo extraido_em do JSON (preenchido pelo JS) -->
+        <p class="selo" id="selo-atualizado" hidden>
+          <span class="ponto" aria-hidden="true"></span>
+          Atualizado em <time id="atualizado-em"></time>
+        </p>
 
-    // Converte 0.82 em "0,82" (vírgula decimal, sempre 2 casas).
-    function numeroBR(v) {
-      return v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
+        <!-- 3. CARTÕES DE DESTAQUE: um por indicador (preenchidos pelo JS) -->
+        <div class="destaques" id="destaques"></div>
+      </div>
+    </section>
 
-    // Cria um elemento <a> com segurança (textContent nunca interpreta HTML).
-    function link(texto, url) {
-      const a = document.createElement("a");
-      a.href = url;
-      a.textContent = texto;
-      return a;
-    }
+    <!-- 4. INDICADORES -->
+    <section class="secao limite" id="indicadores" aria-labelledby="titulo-indicadores">
+      <div class="secao-topo">
+        <h2 id="titulo-indicadores">Indicadores</h2>
+        <!-- Botões de período: valem para todos os gráficos -->
+        <div class="periodos" role="group" aria-label="Período dos gráficos">
+          <button type="button" class="botao" data-meses="todos" aria-pressed="true">Desde 2023</button>
+          <button type="button" class="botao" data-meses="12" aria-pressed="false">12 meses</button>
+          <button type="button" class="botao" data-meses="6" aria-pressed="false">6 meses</button>
+        </div>
+      </div>
+      <div class="grade" id="grade-indicadores"></div>
+      <p class="aviso" id="aviso-erro" role="alert" hidden></p>
+    </section>
 
-    async function carregarIpca() {
-      // Baixa o JSON gerado pelo script Python (mesma pasta do site).
-      const resposta = await fetch("data/ipca.json");
-      if (!resposta.ok) throw new Error("não foi possível ler data/ipca.json (HTTP " + resposta.status + ")");
-      const json = await resposta.json();
+    <!-- 5. NOTÍCIAS (estrutura pronta, ainda sem dados) -->
+    <section class="secao limite" id="noticias" aria-labelledby="titulo-noticias">
+      <div class="secao-topo">
+        <h2 id="titulo-noticias">Notícias</h2>
+        <span class="em-breve">Em breve</span>
+      </div>
+      <p class="secundario">Títulos com veículo, data e link, de fontes oficiais e de veículos
+        de imprensa variados. Cada item terá um selo "Oficial" ou "Imprensa".</p>
+      <ul class="noticias" id="lista-noticias"></ul>
+    </section>
 
-      const s = json.serie;
-      const ultimo = json.dados[json.dados.length - 1];   // o mês mais recente
+    <!-- 6. RESUMO DO PERÍODO (abas prontas, ainda sem texto) -->
+    <section class="secao limite" id="resumo" aria-labelledby="titulo-resumo">
+      <div class="secao-topo">
+        <h2 id="titulo-resumo">Resumo do período</h2>
+        <span class="em-breve">Em breve</span>
+      </div>
+      <div class="abas" role="tablist" aria-label="Áreas do resumo">
+        <button type="button" class="botao" role="tab" id="aba-economia" aria-controls="painel-economia" aria-selected="true">Economia</button>
+        <button type="button" class="botao" role="tab" id="aba-saude" aria-controls="painel-saude" aria-selected="false" tabindex="-1">Saúde</button>
+        <button type="button" class="botao" role="tab" id="aba-educacao" aria-controls="painel-educacao" aria-selected="false" tabindex="-1">Educação</button>
+        <button type="button" class="botao" role="tab" id="aba-exteriores" aria-controls="painel-exteriores" aria-selected="false" tabindex="-1">Relações exteriores</button>
+      </div>
+      <div class="cartao painel-aba" role="tabpanel" id="painel-economia" aria-labelledby="aba-economia" tabindex="0">
+        <p class="secundario">Em breve: fatos da área, cada um com a sua fonte.</p>
+      </div>
+      <div class="cartao painel-aba" role="tabpanel" id="painel-saude" aria-labelledby="aba-saude" tabindex="0" hidden>
+        <p class="secundario">Em breve: fatos da área, cada um com a sua fonte.</p>
+      </div>
+      <div class="cartao painel-aba" role="tabpanel" id="painel-educacao" aria-labelledby="aba-educacao" tabindex="0" hidden>
+        <p class="secundario">Em breve: fatos da área, cada um com a sua fonte.</p>
+      </div>
+      <div class="cartao painel-aba" role="tabpanel" id="painel-exteriores" aria-labelledby="aba-exteriores" tabindex="0" hidden>
+        <p class="secundario">Em breve: fatos da área, cada um com a sua fonte.</p>
+      </div>
+    </section>
+  </main>
 
-      document.getElementById("ipca-nome").textContent = s.nome;
-      document.getElementById("ipca-valor").textContent = numeroBR(ultimo.valor) + "%";
-      document.getElementById("ipca-mes").textContent =
-        s.unidade + " — " + nomeDoMes(ultimo.data) + " (último mês divulgado)";
+  <!-- 7. RODAPÉ (as fontes são preenchidas pelo JS a partir do JSON) -->
+  <footer class="rodape" id="fontes">
+    <div class="limite">
+      <h2>Fontes e licença</h2>
+      <ul class="lista-fontes" id="lista-fontes"></ul>
+      <p class="secundario">Projeto pessoal, sem vínculo com o governo ou partidos.</p>
+      <p class="secundario" id="rodape-atualizado"></p>
+    </div>
+  </footer>
 
-      // Bloco de fonte: série, origem, data de extração, link e licença.
-      const extraido = new Date(json.extraido_em).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
-      const fonte = document.getElementById("ipca-fonte");
-      fonte.append(
-        "Série SGS " + s.codigo + " · Origem: " + s.origem + " · Fonte: ",
-        link(s.fonte, "https://www3.bcb.gov.br/sgspub/"),
-        " · Extraído em " + extraido + " · ",
-        link("dados da consulta", s.url_fonte),
-        " · Licença: " + s.licenca
-      );
-
-      // Tabela com todos os meses, do mais recente para o mais antigo.
-      const tbody = document.getElementById("ipca-tabela");
-      for (const item of [...json.dados].reverse()) {
-        const tr = document.createElement("tr");
-        const tdMes = document.createElement("td");
-        const tdValor = document.createElement("td");
-        tdMes.textContent = nomeDoMes(item.data);
-        tdValor.textContent = numeroBR(item.valor);
-        tr.append(tdMes, tdValor);
-        tbody.append(tr);
-      }
-    }
-
-    // Se algo der errado, mostra a mensagem na página em vez de ficar "carregando…".
-    carregarIpca().catch(function (erro) {
-      const el = document.getElementById("ipca-valor");
-      el.textContent = "Erro ao carregar: " + erro.message;
-      el.className = "erro";
-    });
-  </script>
+  <script src="assets/grafico.js"></script>
+  <script src="assets/painel.js"></script>
 </body>
 </html>

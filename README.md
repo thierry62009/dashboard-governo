@@ -4,9 +4,11 @@ Dashboard autoatualizável do governo federal: indicadores oficiais desde 01/01/
 
 ## Como funciona
 1. `scripts/coletar_ipca.py` baixa o IPCA da API do Banco Central e grava `data/ipca.json`.
-2. `index.html` lê esse JSON e mostra o valor, o mês e a fonte.
+2. `index.html` é a página. O visual está em `assets/estilo.css`; `assets/painel.js`
+   lê os JSON de `data/` e monta os cartões; `assets/grafico.js` desenha os gráficos
+   em SVG, sem bibliotecas.
 3. `.github/workflows/atualizar.yml` roda o script todo dia às 09:00 (Brasília),
-   faz commit do JSON e publica o site no GitHub Pages.
+   faz commit do JSON e publica o site (`index.html`, `assets/` e `data/`) no GitHub Pages.
 
 ## Rodar no seu computador
 ```

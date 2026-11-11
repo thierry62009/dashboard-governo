@@ -1,0 +1,230 @@
+/* =========================================================================
+   Painel do Governo Federal — estilo
+   Todas as cores ficam aqui em cima, como "variáveis". Para mudar uma cor
+   no site inteiro, basta mudar uma linha.
+   Contrastes conferidos (WCAG): texto 14,7:1, secundário 6,4:1,
+   links 9,6:1, laranja 5,8:1 e texto escuro sobre laranja 6,7:1.
+   ========================================================================= */
+:root {
+  --fundo: #101216;          /* fundo da página */
+  --faixa: #15171C;          /* cabeçalho, abertura e rodapé */
+  --cartao: #1A1D24;         /* cartões */
+  --cartao-destaque: #1E2128;/* cartões de destaque da abertura */
+  --borda: #2C303A;          /* bordas e linhas de grade */
+  --eixo: #3A3F4B;           /* linha do zero nos gráficos */
+  --texto: #F3EFE8;
+  --texto-2: #A9A399;        /* texto secundário */
+  --laranja: #F97316;        /* só detalhe: gráficos, botão ativo, barras */
+  --link: #FDBA74;
+  --botao-borda: #4A4F5C;    /* contorno de botão inativo */
+
+  --fonte-titulo: "Archivo", system-ui, sans-serif;
+  --fonte-texto: "Manrope", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte-texto);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+/* Títulos e números grandes usam Archivo 800 */
+h1, h2, h3, .numero, .marca {
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0;
+}
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.1rem; }
+
+a { color: var(--link); text-underline-offset: 3px; }
+
+/* Foco visível para quem navega pelo teclado (Tab) */
+:focus-visible {
+  outline: 3px solid var(--laranja);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.secundario { color: var(--texto-2); }
+
+/* Largura máxima do conteúdo, com 16 px de margem nas laterais no celular */
+.limite {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.pular {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--laranja); color: var(--fundo); padding: 8px 16px; z-index: 10;
+}
+.pular:focus { left: 16px; }
+
+/* ---------- 1. Cabeçalho ---------- */
+.cabecalho {
+  background: var(--faixa);
+  border-bottom: 1px solid var(--borda);
+}
+.cabecalho-linha {
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: 8px 24px;
+  padding-top: 12px; padding-bottom: 12px;
+}
+.marca {
+  display: inline-flex; align-items: center; gap: 10px;
+  color: var(--texto); text-decoration: none; font-size: 1.15rem;
+}
+.marca-barra {
+  width: 5px; height: 1.4em; background: var(--laranja); border-radius: 2px;
+}
+.menu {
+  display: flex; flex-wrap: wrap; gap: 4px 20px;
+  list-style: none; margin: 0; padding: 0;
+}
+.menu a {
+  display: inline-block; padding: 10px 0;  /* área de toque maior */
+  color: var(--texto-2); text-decoration: none; font-weight: 600;
+}
+.menu a:hover { color: var(--texto); }
+
+/* ---------- 2. Abertura ---------- */
+.abertura {
+  background: var(--faixa);
+  border-bottom: 1px solid var(--borda);
+  padding: 40px 0 32px;
+}
+.etiqueta {
+  margin: 0 0 12px;
+  color: var(--texto-2); font-weight: 600;
+  font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.abertura h1 {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  max-width: 22ch;
+}
+.apoio {
+  max-width: 60ch; color: var(--texto-2);
+  font-size: 1.05rem; margin: 16px 0 20px;
+}
+.selo {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin: 0 0 28px; padding: 6px 14px;
+  border: 1px solid var(--borda); border-radius: 999px;
+  background: var(--cartao); font-size: 0.9rem;
+}
+.selo[hidden] { display: none; }
+.ponto {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--laranja);
+}
+
+/* ---------- 3. Cartões de destaque ---------- */
+.destaques {
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+.destaque {
+  background: var(--cartao-destaque);
+  border: 1px solid var(--borda); border-radius: 12px;
+  padding: 18px 20px;
+}
+.destaque .rotulo { margin: 0; color: var(--texto-2); font-weight: 600; }
+.destaque .numero { font-size: 2.4rem; margin: 6px 0 2px; }
+.destaque .referencia { margin: 0 0 10px; }
+.fonte-linha { margin: 0; font-size: 0.82rem; color: var(--texto-2); }
+
+/* ---------- Seções ---------- */
+.secao { padding-top: 48px; padding-bottom: 8px; }
+.secao-topo {
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: 12px; margin-bottom: 16px;
+}
+.em-breve {
+  font-size: 0.8rem; font-weight: 700; color: var(--texto-2);
+  border: 1px solid var(--botao-borda); border-radius: 999px; padding: 2px 10px;
+}
+
+/* ---------- Botões (períodos e abas) ---------- */
+.periodos, .abas { display: flex; flex-wrap: wrap; gap: 8px; }
+.botao {
+  min-height: 44px; padding: 0 16px;
+  font-family: var(--fonte-titulo); font-weight: 700; font-size: 0.95rem;
+  color: var(--texto); background: transparent;
+  border: 1px solid var(--botao-borda); border-radius: 8px;
+  cursor: pointer;
+}
+.botao:hover { border-color: var(--texto-2); }
+/* Botão ativo: fundo laranja com texto ESCURO (texto claro reprovaria no contraste) */
+.botao[aria-pressed="true"], .botao[aria-selected="true"] {
+  background: var(--laranja); border-color: var(--laranja); color: var(--fundo);
+}
+.abas { margin-bottom: 12px; }
+
+/* ---------- 4. Grade de cartões de indicadores ---------- */
+.grade {
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr));
+}
+.cartao {
+  background: var(--cartao);
+  border: 1px solid var(--borda); border-radius: 12px;
+  padding: 18px 20px;
+  min-width: 0;  /* deixa o cartão encolher no celular */
+}
+.cartao h3 { margin-bottom: 4px; }
+.cartao .subtitulo { margin: 0 0 12px; color: var(--texto-2); font-size: 0.9rem; }
+
+/* Área do gráfico: a dica (tooltip) é posicionada dentro dela */
+.grafico { position: relative; margin: 8px 0 12px; }
+.grafico svg { display: block; width: 100%; height: auto; overflow: visible; }
+.grafico text {
+  fill: var(--texto-2); font-family: var(--fonte-texto); font-size: 12px;
+}
+.dica {
+  position: absolute; pointer-events: none;
+  background: var(--fundo); border: 1px solid var(--borda); border-radius: 8px;
+  padding: 6px 10px; font-size: 0.85rem; white-space: nowrap;
+  transform: translate(-50%, -100%);
+}
+.dica strong { font-family: var(--fonte-titulo); }
+
+/* Tabela com os números: rola para o lado se não couber */
+details { margin: 4px 0 12px; }
+summary { cursor: pointer; color: var(--link); padding: 8px 0; }
+.rolagem { overflow-x: auto; max-height: 320px; overflow-y: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { padding: 6px 10px; border-bottom: 1px solid var(--borda); text-align: right; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--texto-2); font-weight: 600; position: sticky; top: 0; background: var(--cartao); }
+
+.aviso { color: var(--link); }
+.aviso[hidden] { display: none; }
+
+/* ---------- 5. Notícias ---------- */
+.noticias { list-style: none; margin: 0; padding: 0; }
+.selo-tipo {
+  display: inline-block; font-size: 0.75rem; font-weight: 700;
+  border: 1px solid var(--botao-borda); border-radius: 4px; padding: 0 6px;
+}
+
+/* ---------- 6. Resumo ---------- */
+.painel-aba[hidden] { display: none; }
+
+/* ---------- 7. Rodapé ---------- */
+.rodape {
+  margin-top: 56px; padding: 32px 0 40px;
+  background: var(--faixa);
+  border-top: 3px solid var(--laranja);  /* barra laranja do rodapé */
+}
+.rodape h2 { font-size: 1.15rem; margin-bottom: 12px; }
+.lista-fontes { margin: 0 0 16px; padding-left: 18px; }
+.lista-fontes li { margin-bottom: 8px; }
+.rodape p { margin: 4px 0; font-size: 0.9rem; }
