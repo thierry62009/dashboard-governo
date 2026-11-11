@@ -3,7 +3,8 @@
    Todas as cores ficam aqui em cima, como "variáveis". Para mudar uma cor
    no site inteiro, basta mudar uma linha.
    Contrastes conferidos (WCAG): texto 14,7:1, secundário 6,4:1,
-   links 9,6:1, laranja 5,8:1 e texto escuro sobre laranja 6,7:1.
+   links 9,6:1, laranja 5,8:1, texto escuro sobre laranja 6,7:1
+   e contorno dos botões inativos 3,8:1 (mínimo para bordas: 3:1).
    ========================================================================= */
 :root {
   --fundo: #101216;          /* fundo da página */
@@ -16,7 +17,7 @@
   --texto-2: #A9A399;        /* texto secundário */
   --laranja: #F97316;        /* só detalhe: gráficos, botão ativo, barras */
   --link: #FDBA74;
-  --botao-borda: #4A4F5C;    /* contorno de botão inativo */
+  --botao-borda: #6B7180;    /* contorno de botão inativo (3,8:1 sobre o fundo) */
 
   --fonte-titulo: "Archivo", system-ui, sans-serif;
   --fonte-texto: "Manrope", system-ui, sans-serif;
