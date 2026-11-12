@@ -106,12 +106,12 @@ Iniciante em programação (~3h por semana) que quer **aprender**, não só rece
 - **Fase 5 — resumo do período:** fatos com fonte em cada afirmação, escrito e revisado com o usuário, nunca gerado automaticamente.
 
 ## Pendências abertas (A conferir)
-- [ ] **Teste de 7 dias da rotina agendada (de 11/11 a 17/11/2026).** A primeira execução por `schedule` ainda não tinha acontecido em 10/11. Confira em https://github.com/thierry62009/dashboard-governo/actions
+- [ ] **Teste de 7 dias da rotina agendada (de 11/11 a 17/11/2026).** 1ª execução por `schedule`: 11/11, iniciou 19:29 UTC (atraso de ~7h30 do GitHub em relação às 12:00), sucesso. Confira em https://github.com/thierry62009/dashboard-governo/actions
 - [ ] Texto de citação exigido pelo BCB para a ODbL: https://dadosabertos.bcb.gov.br/
 - [ ] Comparar valores do gráfico com o SGS (fev/2025 = 1,31; ago/2026 = −0,32): https://www3.bcb.gov.br/sgspub/
 - [ ] O usuário deve conferir se o título e a frase de apoio da abertura estão neutros.
 - [ ] O usuário deve ver o visual no próprio celular.
-- [ ] Decisão do usuário: a mensagem do commit do robô usa a data UTC (sai "11/11" para uma extração às 21:19 de 10/11 em Brasília). Dá para trocar para `TZ=America/Sao_Paulo`.
+- [ ] Confirmar no próximo commit do robô que a mensagem sai no horário de Brasília (formato "Dados atualizados em dd/mm/aaaa às hh:mm (Brasília)", alterado em 11/11).
 - [ ] Atenção: o `ubuntu-latest` está migrando para o Ubuntu 26. Se o passo "Instalar Python" falhar, ajuste a versão do Python no workflow.
 
 ## Como rodar localmente
