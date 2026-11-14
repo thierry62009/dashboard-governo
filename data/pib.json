@@ -1,0 +1,76 @@
+{
+  "serie": {
+    "codigo": 5932,
+    "identificacao": "tabela 5932, variável 6562",
+    "nome": "PIB a preços de mercado - taxa acumulada em quatro trimestres (em relação ao mesmo período do ano anterior)",
+    "unidade": "%",
+    "periodicidade": "trimestral",
+    "origem": "IBGE, Contas Nacionais Trimestrais",
+    "fonte": "IBGE - SIDRA (Sistema IBGE de Recuperação Automática)",
+    "fonte_sigla": "IBGE/SIDRA",
+    "licenca": "Uso livre com citação da fonte (IBGE)",
+    "url_licenca": "https://biblioteca.ibge.gov.br/biblioteca-servicos.html",
+    "url_fonte": "https://apisidra.ibge.gov.br/values/t/5932/n1/all/v/6562/p/all/c11255/90707",
+    "url_pagina": "https://sidra.ibge.gov.br/tabela/5932",
+    "observacao": "Variação do volume do PIB nos quatro trimestres terminados no trimestre indicado, em relação aos quatro trimestres anteriores."
+  },
+  "extraido_em": "2026-11-14T16:06:12-03:00",
+  "dados": [
+    {
+      "data": "2023-03",
+      "valor": 3.8
+    },
+    {
+      "data": "2023-06",
+      "valor": 3.8
+    },
+    {
+      "data": "2023-09",
+      "valor": 3.3
+    },
+    {
+      "data": "2023-12",
+      "valor": 3.2
+    },
+    {
+      "data": "2024-03",
+      "valor": 2.8
+    },
+    {
+      "data": "2024-06",
+      "valor": 2.7
+    },
+    {
+      "data": "2024-09",
+      "valor": 3.1
+    },
+    {
+      "data": "2024-12",
+      "valor": 3.4
+    },
+    {
+      "data": "2025-03",
+      "valor": 3.6
+    },
+    {
+      "data": "2025-06",
+      "valor": 3.3
+    },
+    {
+      "data": "2025-09",
+      "valor": 2.7
+    },
+    {
+      "data": "2025-12",
+      "valor": 2.3
+    },
+    {
+      "data": "2026-03",
+      "valor": 2.0
+    },
+    {
+      "data": "2026-06",
+      "valor": 1.9
+    }
+  ]
+}
