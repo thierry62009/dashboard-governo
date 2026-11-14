@@ -35,6 +35,30 @@ const INDICADORES = [
     casas: 1, sufixo: "%", destaque: true },
   { id: "renda", arquivo: "data/renda.json", area: "trabalho", titulo: "Rendimento médio real do trabalho",
     casas: 0, prefixo: "R$ " },
+  { id: "emprego_formal", arquivo: "data/emprego_formal.json", area: "trabalho",
+    titulo: "Emprego formal, saldo do mês (Novo Caged)", casas: 0 },
+  // ----- Contas públicas -----
+  { id: "divida_bruta", arquivo: "data/divida_bruta.json", area: "contas",
+    titulo: "Dívida bruta do governo geral", casas: 2, sufixo: "%", destaque: true },
+  { id: "divida_liquida", arquivo: "data/divida_liquida.json", area: "contas",
+    titulo: "Dívida líquida do setor público", casas: 2, sufixo: "%" },
+  { id: "resultado_primario", arquivo: "data/resultado_primario.json", area: "contas",
+    titulo: "Resultado primário (NFSP), acumulado em 12 meses", casas: 2, sufixo: "%" },
+  // ----- Saúde -----
+  { id: "mortalidade_menores_5", arquivo: "data/mortalidade_menores_5.json", area: "saude",
+    titulo: "Mortalidade de menores de 5 anos", casas: 1 },
+  { id: "mortalidade_materna", arquivo: "data/mortalidade_materna.json", area: "saude",
+    titulo: "Mortalidade materna", casas: 1 },
+  // ----- Educação -----
+  { id: "analfabetismo", arquivo: "data/analfabetismo.json", area: "educacao",
+    titulo: "Analfabetismo (15 anos ou mais)", casas: 1, sufixo: "%" },
+  { id: "escolarizacao_15_17", arquivo: "data/escolarizacao_15_17.json", area: "educacao",
+    titulo: "Escolarização de 15 a 17 anos", casas: 1, sufixo: "%" },
+  { id: "conclusao_ensino_medio", arquivo: "data/conclusao_ensino_medio.json", area: "educacao",
+    titulo: "Conclusão do ensino médio (20 a 22 anos)", casas: 1, sufixo: "%" },
+  // ----- Segurança -----
+  { id: "homicidios", arquivo: "data/homicidios.json", area: "seguranca",
+    titulo: "Homicídios intencionais", casas: 2 },
 ];
 
 // Valores usados quando o JSON não traz o campo (formato antigo, só do BCB)

@@ -6,7 +6,7 @@
 Site estático, público e autoatualizável sobre o governo federal do Brasil. Presidente em exercício: Lula, 3º mandato (desde 01/01/2023). O 4º mandato está previsto para janeiro de 2027. No futuro, o painel deve permitir alternar e comparar mandatos de vários presidentes (por isso os dados são organizados por mandato; ver "Decisões já tomadas").
 
 O site traz:
-- indicadores oficiais (BCB/SGS e IBGE/SIDRA) desde 01/01/2023, com gráficos;
+- indicadores oficiais (BCB/SGS, IBGE/SIDRA e Ipeadata) desde 01/01/2023, com gráficos, em 6 áreas: economia, trabalho e renda, contas públicas, saúde, educação e segurança;
 - notícias (só título, veículo, data e link);
 - resumo do período, só com fatos e com fonte em cada afirmação.
 

@@ -141,6 +141,93 @@ INDICADORES = [
         "observacao": "Trimestre móvel terminado no mês indicado. Rendimento real: o IBGE corrige "
                       "os valores pela inflação, e a série inteira pode mudar a cada divulgação.",
     },
+    {
+        "id": "emprego_formal", "tipo": "ipea", "codigo": "CAGED12_SALDONAJU12",
+        "nome": "Empregados - saldo - com ajuste - novo Caged",
+        "unidade": "Pessoas", "origem": "Novo Caged (Min. Economia/SEPRT, conforme o Ipeadata)",
+        "periodicidade": "mensal",
+        "pagina": "https://www.ipeadata.gov.br/api/odata4/Metadados('CAGED12_SALDONAJU12')",
+        "observacao": "Saldo = admissões menos demissões de empregados com carteira no mês. "
+                      "\"Com ajuste\" inclui as declarações entregues fora do prazo, "
+                      "por isso os meses recentes podem mudar.",
+    },
+    # ----- Contas públicas -----
+    {
+        "id": "divida_bruta", "tipo": "sgs", "codigo": 13762,
+        "nome": "Dívida bruta do governo geral (% PIB) - Metodologia utilizada a partir de 2008",
+        "unidade": "% do PIB", "origem": "Banco Central do Brasil, Departamento Econômico",
+        "periodicidade": "mensal",
+        "pagina": PAGINA_BCB + "13762-divida-bruta-do-governo-geral--pib---metodologia-utilizada-a-partir-de-2008",
+    },
+    {
+        "id": "divida_liquida", "tipo": "sgs", "codigo": 4513,
+        "nome": "Dívida Líquida do Setor Público (% PIB) - Total - Setor público consolidado",
+        "unidade": "% do PIB", "origem": "Banco Central do Brasil, Departamento Econômico",
+        "periodicidade": "mensal",
+        "pagina": PAGINA_BCB + "4513-divida-liquida-do-setor-publico--pib---total---setor-publico-consolidado",
+    },
+    {
+        "id": "resultado_primario", "tipo": "sgs", "codigo": 5793,
+        "nome": "NFSP sem desvalorização cambial (% PIB) - Fluxo acumulado em 12 meses - "
+                "Resultado primário - Total - Setor público consolidado",
+        "unidade": "% do PIB", "origem": "Banco Central do Brasil, Departamento Econômico",
+        "periodicidade": "mensal",
+        "pagina": PAGINA_BCB + "5793-nfsp-sem-desvalorizacao-cambial--pib---fluxo-acumulado-em-12-meses---resultado-primario---tota",
+        "observacao": "NFSP = necessidade de financiamento do setor público. Pela convenção do "
+                      "Banco Central, valor positivo indica déficit e valor negativo indica superávit.",
+    },
+    # ----- Saúde (indicadores dos Objetivos de Desenvolvimento Sustentável, anuais) -----
+    {
+        "id": "mortalidade_menores_5", "tipo": "sidra", "tabela": 6695, "variavel": 9731,
+        "variavel_nome": "Taxa de mortalidade em menores de 5 anos",
+        "unidade_api": "Óbitos por mil nascidos vivos",
+        "nome": "Indicador ODS 3.2.1 - Taxa de mortalidade em menores de 5 anos",
+        "unidade": "Óbitos por mil nascidos vivos",
+        "origem": "IBGE, Objetivos de Desenvolvimento Sustentável", "periodicidade": "anual",
+    },
+    {
+        "id": "mortalidade_materna", "tipo": "sidra", "tabela": 6694, "variavel": 9730,
+        "variavel_nome": "Razão de mortalidade materna",
+        "unidade_api": "Óbitos por 100 mil nascidos vivos",
+        "nome": "Indicador ODS 3.1.1 - Razão de mortalidade materna",
+        "unidade": "Óbitos por 100 mil nascidos vivos",
+        "origem": "IBGE, Objetivos de Desenvolvimento Sustentável", "periodicidade": "anual",
+    },
+    # ----- Educação (anuais) -----
+    {
+        "id": "analfabetismo", "tipo": "sidra", "tabela": 7113, "variavel": 10267,
+        "classificacoes": "/c2/6794/c58/2795",   # sexo: total; idade: 15 anos ou mais
+        "variavel_nome": "Taxa de analfabetismo das pessoas de 15 anos ou mais de idade",
+        "unidade_api": "%",
+        "nome": "Taxa de analfabetismo das pessoas de 15 anos ou mais de idade",
+        "unidade": "%", "origem": "IBGE, PNAD Contínua anual", "periodicidade": "anual",
+    },
+    {
+        "id": "escolarizacao_15_17", "tipo": "sidra", "tabela": 7138, "variavel": 10276,
+        "classificacoes": "/c2/6794/c58/2792",   # sexo: total; idade: 15 a 17 anos
+        "variavel_nome": "Taxa de escolarização", "unidade_api": "%",
+        "nome": "Taxa de escolarização - 15 a 17 anos",
+        "unidade": "%", "origem": "IBGE, PNAD Contínua anual", "periodicidade": "anual",
+        "observacao": "Parcela das pessoas de 15 a 17 anos que frequentam escola.",
+    },
+    {
+        "id": "conclusao_ensino_medio", "tipo": "sidra", "tabela": 4731, "variavel": 4721,
+        "classificacoes": "/c582/59997",         # ensino médio - pessoas de 20 a 22 anos
+        "variavel_nome": "Taxa de conclusão de nível de ensino", "unidade_api": "%",
+        "nome": "Indicador ODS 4.1.2 - Taxa de conclusão de nível de ensino - "
+                "Ensino médio - Pessoas de 20 a 22 anos",
+        "unidade": "%", "origem": "IBGE, Objetivos de Desenvolvimento Sustentável",
+        "periodicidade": "anual",
+    },
+    # ----- Segurança (anual) -----
+    {
+        "id": "homicidios", "tipo": "sidra", "tabela": 6606, "variavel": 13532,
+        "variavel_nome": "Taxa de vítimas de homicídios intencionais",
+        "unidade_api": "Óbitos por 100 mil habitantes",
+        "nome": "Indicador ODS 16.1.1 - Taxa de vítimas de homicídios intencionais",
+        "unidade": "Óbitos por 100 mil habitantes",
+        "origem": "IBGE, Objetivos de Desenvolvimento Sustentável", "periodicidade": "anual",
+    },
 ]
 
 
