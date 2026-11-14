@@ -74,6 +74,7 @@ Iniciante em programação (~3h por semana). **Prioridade: receber o trabalho pr
 - Códigos de período: `aaaamm` no trimestre móvel (mês em que o trimestre termina), `aaaa0t` no trimestral (t = trimestre) e `aaaa` no anual.
 - Erros já observados: tabela ou variável inexistente dá HTTP 400 com texto explicativo.
 - O script confere, a cada execução, se o nome da variável e a unidade continuam iguais aos conferidos; se mudarem, recusa os dados.
+- O serviço de metadados (`servicodados.ibge.gov.br`) **não responde aos servidores do GitHub Actions** (tempo esgotado); a API de dados (`apisidra`) responde. No GitHub, os metadados do IBGE ficam como aviso; confira-os rodando o verificador no seu computador.
 - Séries "reais" (rendimento) são recalculadas pelo IBGE a cada divulgação: os valores antigos mudam.
 
 ## Cuidados com o Ipeadata

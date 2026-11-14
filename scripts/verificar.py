@@ -104,8 +104,17 @@ class ErroDeRede(Exception):
     """A rede ou o servidor falhou (não é culpa do dado)."""
 
 
+# Servidores que já falharam por rede nesta execução: não insiste neles de novo
+# (o serviço de metadados do IBGE não responde aos servidores do GitHub, e cada
+# insistência custava ~2 minutos).
+SERVIDORES_FORA = set()
+
+
 def baixar(url, como_json=True):
     """Baixa um endereço com timeout e até NOVAS_TENTATIVAS novas tentativas."""
+    servidor = urllib.parse.urlsplit(url).netloc
+    if servidor in SERVIDORES_FORA:
+        raise ErroDeRede(f"{servidor} já não respondeu antes nesta execução")
     pedido = urllib.request.Request(url, headers={"User-Agent": "painel-verificador/1.0 (python-urllib)"})
     espera = ESPERA
     for tentativa in range(NOVAS_TENTATIVAS + 1):
@@ -124,6 +133,7 @@ def baixar(url, como_json=True):
         if tentativa < NOVAS_TENTATIVAS:
             time.sleep(espera)
             espera *= 2
+    SERVIDORES_FORA.add(servidor)
     raise ErroDeRede(f"{type(ultimo).__name__}: {ultimo} (depois de {NOVAS_TENTATIVAS + 1} tentativas)")
 
 
