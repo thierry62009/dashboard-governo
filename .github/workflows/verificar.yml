@@ -16,6 +16,9 @@ permissions:
 jobs:
   verificar:
     runs-on: ubuntu-latest
+    # As APIs brasileiras respondem devagar para os servidores do GitHub (fora do país):
+    # a verificação leva vários minutos. Este limite evita uma execução presa para sempre.
+    timeout-minutes: 60
     steps:
       - name: Baixar o código do repositório
         uses: actions/checkout@v7

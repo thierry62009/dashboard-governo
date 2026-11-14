@@ -512,8 +512,9 @@ def main():
         sys.exit("Indicador desconhecido: " + ", ".join(sorted(desconhecidos)))
 
     resultados = []
+    comeco = time.monotonic()
     for ind in escolhidos:
-        print(f"Verificando {ind['id']}...", flush=True)
+        print(f"Verificando {ind['id']}... ({time.monotonic() - comeco:.0f} s desde o início)", flush=True)
         r = Resultado(f"{ind['id']} ({ind['tipo'].upper()} {ind.get('codigo', ind.get('tabela'))})")
         resultados.append(r)
         caminho = os.path.join(args.raiz, "data", ind["id"] + ".json")
