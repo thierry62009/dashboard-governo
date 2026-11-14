@@ -1,7 +1,11 @@
 # CLAUDE.md — Painel do Governo Federal
 
+> Início de cada sessão: leia também o `STATUS.md` (o que está pronto, o que falta, o que o usuário precisa conferir). Fim de cada sessão: atualize o `STATUS.md`.
+
 ## Objetivo
-Site estático, público e autoatualizável sobre o governo federal do Brasil (presidente em exercício: Lula, terceiro mandato, desde 01/01/2023), com:
+Site estático, público e autoatualizável sobre o governo federal do Brasil. Presidente em exercício: Lula, 3º mandato (desde 01/01/2023). O 4º mandato está previsto para janeiro de 2027. No futuro, o painel deve permitir alternar e comparar mandatos de vários presidentes (por isso os dados são organizados por mandato; ver "Decisões já tomadas").
+
+O site traz:
 - indicadores oficiais (BCB/SGS e IBGE/SIDRA) desde 01/01/2023, com gráficos;
 - notícias (só título, veículo, data e link);
 - resumo do período, só com fatos e com fonte em cada afirmação.
@@ -10,27 +14,42 @@ Python coleta os dados; HTML/CSS/JS simples mostra a página. Hospedado no GitHu
 Site: https://thierry62009.github.io/dashboard-governo/
 
 ## Sobre o usuário
-Iniciante em programação (~3h por semana) que quer **aprender**, não só receber código pronto. Escreva em português simples: explique o raciocínio em poucas linhas antes de implementar, comente o código em português e não use frameworks pesados.
+Iniciante em programação (~3h por semana). **Prioridade: receber o trabalho pronto, com o mínimo de interferência dele.** Ele ainda quer aprender, então:
+- comente o código em português;
+- ao fim de cada fase, escreva "Como isso funciona" em poucas linhas, em português simples;
+- não use frameworks pesados;
+- não peça aprovação de planos nem explique longamente antes de implementar.
 
 ## Regras de trabalho (obrigatórias)
 1. **Teste de verdade** e mostre a evidência: a resposta real das APIs, falhas provocadas de propósito e a página aberta num navegador.
-2. **Nunca invente** códigos de série ou tabela, números ou datas. Um código só é usado depois de testado na API e confirmado pelo usuário no portal oficial.
+2. **Nunca invente** códigos de série ou tabela, números ou datas. Um código só é usado depois de:
+   - (a) testado na API, e
+   - (b) confirmado por fonte oficial independente do teste: nome, unidade e periodicidade conferem com a página ou os metadados oficiais da série (portal do BCB, IBGE/SIDRA).
+   Se o item (b) não for possível, o indicador **não vai para a página**: fica "Em breve" e entra em "A conferir". O usuário revisa os códigos em lote ao fim de cada fase, e não um a um.
 3. **Todo número exibido** mostra série/tabela, data de extração (vinda do JSON, nunca digitada), link da fonte e licença. Dados do BCB têm licença ODbL, que exige citação.
 4. **Neutralidade:**
    - indicadores só de fontes oficiais;
    - notícias de veículos variados, sem opinião, só com título, veículo, data e link;
    - **nunca gerar o resumo do governo automaticamente**;
-   - evitar cores de partidos em destaque.
-5. **"A conferir":** liste, com link, tudo o que o usuário precisa checar na fonte.
+   - evitar cores de partidos em destaque;
+   - ao comparar mandatos ou presidentes, usar as mesmas métricas e a mesma janela de tempo.
+5. **"A conferir":** registre no `STATUS.md`, com link, tudo o que o usuário precisa checar na fonte.
 6. **Nada de números de exemplo** na página publicada. O que ainda não existe fica oculto ou marcado "Em breve".
-7. **Ritmo:** pode executar etapas inteiras. Pare só quando:
-   - precisar de login ou autorização;
-   - houver uma decisão que é do usuário;
-   - algo falhar sem solução.
-   
-   Ao fim de cada etapa, diga o que foi feito, como rodar e qual é o próximo passo.
-8. **Git:** faça commit com mensagem clara ao fim de cada tarefa. **Push só quando o usuário pedir.** O commit de dados é do robô: não faça commit de `data/*.json` gerado em testes locais (descarte com `git checkout -- data/`).
-9. **Não quebre a rotina diária.** Depois de cada mudança, confirme que o script roda, que o YAML é válido e que a pasta `_site` montada como no workflow funciona.
+7. **Autonomia:** execute fases inteiras, em ordem, sem pedir confirmação. Pare só quando:
+   - precisar de login, chave ou autorização que só o usuário tem;
+   - houver uma decisão política ou editorial que não esteja nestas regras;
+   - algo falhar sem solução depois de duas tentativas diferentes;
+   - a ação for irreversível ou fora deste repositório.
+   Decisões técnicas e escolhas dentro das regras (por exemplo, quais veículos de notícia, desde que variados) são suas: decida e registre o motivo em uma linha no `STATUS.md`.
+   Ao fim de cada fase, relate: o que foi feito, como rodar e o próximo passo.
+8. **Git:**
+   - commit com mensagem clara ao fim de cada tarefa;
+   - **push para `main` permitido ao fim de cada fase concluída**, e só se: os testes passaram, o YAML é válido, a pasta `_site` montada como no workflow funciona e nenhum `data/*.json` gerado em teste local está no commit;
+   - nunca use force push;
+   - o commit de dados é do robô: descarte os JSON gerados em testes locais com `git checkout -- data/`.
+9. **Não quebre a rotina diária.** Depois de cada mudança, confirme que o script roda, que o YAML é válido e que a pasta `_site` montada como no workflow funciona. **Não altere gatilhos nem horário do cron antes de 17/11/2026** (fim do teste de 7 dias).
+10. **Economize uso:** não releia arquivos sem necessidade e não repita buscas já feitas. Se perceber que o limite de uso está acabando, termine a tarefa atual em estado consistente (testada e com commit), atualize o `STATUS.md` e pare.
+11. **Aprenda e registre:** ao descobrir um cuidado novo de uma API, acrescente-o na seção de cuidados abaixo.
 
 ## Cuidados com o SGS (API do BCB)
 - URL: `https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados?formato=json&dataInicial=dd/mm/aaaa&dataFinal=dd/mm/aaaa`
@@ -54,6 +73,8 @@ Iniciante em programação (~3h por semana) que quer **aprender**, não só rece
     "dados": [{"data": "aaaa-mm", "valor": número}]
   }
   ```
+  Esse formato é mantido para todos os indicadores novos.
+- **Mandatos:** `data/mandatos.json` lista os mandatos, cada um com `id`, `presidente`, `numero`, `inicio` (aaaa-mm-dd), `fim` (aaaa-mm-dd ou `null`) e `status` (`encerrado`, `em_andamento` ou `futuro`). Hoje: Lula 3º mandato (em andamento, desde 2023-01-01) e Lula 4º mandato (futuro, janeiro de 2027). Os indicadores continuam em um arquivo por série; a página filtra pelo intervalo do mandato escolhido. Para acrescentar um mandato ou presidente, edite só esse arquivo.
 - **Página:** `index.html` + `assets/estilo.css` + `assets/painel.js` (lista `INDICADORES`; para um indicador novo, acrescente um item) + `assets/grafico.js` (colunas em SVG com JS puro, sem bibliotecas nem CDN).
 - **Visual:** tema escuro, sem fundo branco.
   - Cores (variáveis no topo do `estilo.css`):
@@ -89,30 +110,6 @@ Iniciante em programação (~3h por semana) que quer **aprender**, não só rece
   - foco visível;
   - funciona de 360 a 1440 px sem rolagem lateral.
 - **Gráfico do IPCA:** colunas a partir do zero, porque é uma variação mensal com meses negativos.
-
-## Pronto
-- Coleta do IPCA, série SGS 433. Conferido no portal pelo usuário: "Índice nacional de preços ao consumidor-amplo (IPCA)", Var. % mensal, origem IBGE.
-- Página com o visual aprovado, publicada e testada no Chromium em 360, 768 e 1440 px.
-- Rotina diária no GitHub Actions funcionando nas execuções por push. O robô faz commit a cada execução.
-
-## Falta
-- **Fase 3 — indicadores** (esperar o usuário confirmar cada código antes de usar):
-  - Selic
-  - dólar
-  - desocupação (PNAD Contínua)
-  - PIB
-  - renda média
-- **Fase 4 — notícias:** RSS da Agência Brasil e do Planalto, mais 2 ou 3 veículos privados de linhas diferentes (checar o RSS e os termos de uso de cada um). Selo "Oficial" ou "Imprensa".
-- **Fase 5 — resumo do período:** fatos com fonte em cada afirmação, escrito e revisado com o usuário, nunca gerado automaticamente.
-
-## Pendências abertas (A conferir)
-- [ ] **Teste de 7 dias da rotina agendada (de 11/11 a 17/11/2026).** 1ª execução por `schedule`: 11/11, iniciou 19:29 UTC (atraso de ~7h30 do GitHub em relação às 12:00), sucesso. Confira em https://github.com/thierry62009/dashboard-governo/actions
-- [ ] Texto de citação exigido pelo BCB para a ODbL: https://dadosabertos.bcb.gov.br/
-- [ ] Comparar valores do gráfico com o SGS (fev/2025 = 1,31; ago/2026 = −0,32): https://www3.bcb.gov.br/sgspub/
-- [ ] O usuário deve conferir se o título e a frase de apoio da abertura estão neutros.
-- [ ] O usuário deve ver o visual no próprio celular.
-- [ ] Confirmar no próximo commit do robô que a mensagem sai no horário de Brasília (formato "Dados atualizados em dd/mm/aaaa às hh:mm (Brasília)", alterado em 11/11).
-- [ ] Atenção: o `ubuntu-latest` está migrando para o Ubuntu 26. Se o passo "Instalar Python" falhar, ajuste a versão do Python no workflow.
 
 ## Como rodar localmente
 ```
