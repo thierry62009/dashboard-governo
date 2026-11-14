@@ -14,7 +14,7 @@
     "url_pagina": "https://sidra.ibge.gov.br/tabela/6390",
     "observacao": "Trimestre móvel terminado no mês indicado. Rendimento real: o IBGE corrige os valores pela inflação, e a série inteira pode mudar a cada divulgação."
   },
-  "extraido_em": "2026-11-14T17:08:27-03:00",
+  "extraido_em": "2026-11-14T17:21:02-03:00",
   "dados": [
     {
       "data": "2023-01",
