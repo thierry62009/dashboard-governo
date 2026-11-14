@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Painel do Governo Federal</title>
-  <meta name="description" content="Indicadores oficiais do Brasil desde 2023 (economia, trabalho, contas públicas, saúde, educação e segurança), com fonte e data de extração.">
+  <title>Painel do Governo Federal (não oficial)</title>
+  <meta name="description" content="Projeto pessoal e não oficial: indicadores oficiais do Brasil desde 2023 (economia, trabalho, contas públicas, saúde, educação e segurança), com fonte e data de extração.">
   <meta name="color-scheme" content="dark">
 
   <!-- Fontes do Google Fonts: Archivo (títulos e números) e Manrope (texto) -->
@@ -39,10 +39,10 @@
     <!-- 2. ABERTURA -->
     <section class="abertura">
       <div class="limite">
-        <p class="etiqueta">Mandato 2023 a 2026 · Dados oficiais</p>
+        <p class="etiqueta">Mandato 2023 a 2026 · Dados oficiais · Projeto não oficial</p>
         <h1>Indicadores do governo federal, direto das fontes oficiais</h1>
         <p class="apoio">Dados do Banco Central, do IBGE e do Ipeadata desde 1º de janeiro de 2023,
-          atualizados todos os dias, com série, data de extração e link em cada número.</p>
+          verificados todos os dias (cada série muda no ritmo da fonte: diária, mensal, trimestral ou anual), com série, data de extração e link em cada número.</p>
         <!-- "Atualizado em" vem do campo extraido_em do JSON (preenchido pelo JS) -->
         <p class="selo" id="selo-atualizado" hidden>
           <span class="ponto" aria-hidden="true"></span>
@@ -94,11 +94,19 @@
       </div>
       <div class="abas" role="tablist" aria-label="Áreas do resumo">
         <button type="button" class="botao" role="tab" id="aba-economia" aria-controls="painel-economia" aria-selected="true">Economia</button>
+        <button type="button" class="botao" role="tab" id="aba-trabalho" aria-controls="painel-trabalho" aria-selected="false" tabindex="-1">Trabalho e renda</button>
+        <button type="button" class="botao" role="tab" id="aba-contas" aria-controls="painel-contas" aria-selected="false" tabindex="-1">Contas públicas</button>
         <button type="button" class="botao" role="tab" id="aba-saude" aria-controls="painel-saude" aria-selected="false" tabindex="-1">Saúde</button>
         <button type="button" class="botao" role="tab" id="aba-educacao" aria-controls="painel-educacao" aria-selected="false" tabindex="-1">Educação</button>
-        <button type="button" class="botao" role="tab" id="aba-exteriores" aria-controls="painel-exteriores" aria-selected="false" tabindex="-1">Relações exteriores</button>
+        <button type="button" class="botao" role="tab" id="aba-seguranca" aria-controls="painel-seguranca" aria-selected="false" tabindex="-1">Segurança</button>
       </div>
       <div class="cartao painel-aba" role="tabpanel" id="painel-economia" aria-labelledby="aba-economia" tabindex="0">
+        <p class="secundario">Em breve: fatos da área, cada um com a sua fonte.</p>
+      </div>
+      <div class="cartao painel-aba" role="tabpanel" id="painel-trabalho" aria-labelledby="aba-trabalho" tabindex="0" hidden>
+        <p class="secundario">Em breve: fatos da área, cada um com a sua fonte.</p>
+      </div>
+      <div class="cartao painel-aba" role="tabpanel" id="painel-contas" aria-labelledby="aba-contas" tabindex="0" hidden>
         <p class="secundario">Em breve: fatos da área, cada um com a sua fonte.</p>
       </div>
       <div class="cartao painel-aba" role="tabpanel" id="painel-saude" aria-labelledby="aba-saude" tabindex="0" hidden>
@@ -107,7 +115,7 @@
       <div class="cartao painel-aba" role="tabpanel" id="painel-educacao" aria-labelledby="aba-educacao" tabindex="0" hidden>
         <p class="secundario">Em breve: fatos da área, cada um com a sua fonte.</p>
       </div>
-      <div class="cartao painel-aba" role="tabpanel" id="painel-exteriores" aria-labelledby="aba-exteriores" tabindex="0" hidden>
+      <div class="cartao painel-aba" role="tabpanel" id="painel-seguranca" aria-labelledby="aba-seguranca" tabindex="0" hidden>
         <p class="secundario">Em breve: fatos da área, cada um com a sua fonte.</p>
       </div>
     </section>
@@ -118,7 +126,8 @@
     <div class="limite">
       <h2>Fontes e licença</h2>
       <ul class="lista-fontes" id="lista-fontes"></ul>
-      <p class="secundario">Projeto pessoal, sem vínculo com o governo ou partidos.</p>
+      <p class="secundario">Projeto pessoal e não oficial, sem vínculo com o governo, com partidos ou com os órgãos citados. Os dados pertencem às fontes listadas acima e são apresentados sem opinião.</p>
+      <p class="secundario">Encontrou um erro? Avise pelas <a href="https://github.com/thierry62009/dashboard-governo/issues">Issues do projeto no GitHub</a>. Se o erro for confirmado na fonte, o dado é corrigido.</p>
       <p class="secundario" id="rodape-atualizado"></p>
     </div>
   </footer>

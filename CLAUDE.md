@@ -50,6 +50,13 @@ Iniciante em programação (~3h por semana). **Prioridade: receber o trabalho pr
 9. **Não quebre a rotina diária.** Depois de cada mudança, confirme que o script roda, que o YAML é válido e que a pasta `_site` montada como no workflow funciona. **Não altere gatilhos nem horário do cron antes de 17/11/2026** (fim do teste de 7 dias).
 10. **Economize uso:** não releia arquivos sem necessidade e não repita buscas já feitas. Se perceber que o limite de uso está acabando, termine a tarefa atual em estado consistente (testada e com commit), atualize o `STATUS.md` e pare.
 11. **Aprenda e registre:** ao descobrir um cuidado novo de uma API, acrescente-o na seção de cuidados abaixo.
+12. **Cuidados com texto e risco jurídico** (o site é público e trata de política):
+    - todo texto novo é descritivo: diz o que o dado mede, de onde vem e de quando é, sem adjetivos de juízo ("queda histórica", "preocupante"), sem relação de causa e efeito e sem atribuir intenção ou culpa a pessoas ou órgãos;
+    - o título, a abertura e o rodapé sempre dizem que o projeto é pessoal e **não oficial**; não use brasão, logotipo do governo nem fotos de pessoas;
+    - notícias: só título, veículo, data e link, nunca o texto da matéria;
+    - o resumo do período (Fase 5) traz só fatos, cada um com fonte, escrito e aprovado pelo usuário;
+    - mantenha o canal de contato do rodapé e corrija os erros confirmados na fonte;
+    - nunca publique e-mail, telefone ou outros dados pessoais do usuário no site nem no repositório.
 
 ## Cuidados com o SGS (API do BCB)
 - URL: `https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados?formato=json&dataInicial=dd/mm/aaaa&dataFinal=dd/mm/aaaa`
@@ -121,7 +128,7 @@ Iniciante em programação (~3h por semana). **Prioridade: receber o trabalho pr
   3. cartões de destaque;
   4. indicadores com botões de período (Desde 2023, 12 e 6 meses) e de mandato, agrupados por área;
   5. notícias;
-  6. resumo com abas (Economia, Saúde, Educação, Relações exteriores);
+  6. resumo com abas, uma por área dos indicadores (Economia, Trabalho e renda, Contas públicas, Saúde, Educação, Segurança);
   7. rodapé com fonte e licença.
 - **Acessibilidade:**
   - contraste de texto de pelo menos 4,5:1 (o menor atual é 6,4:1);

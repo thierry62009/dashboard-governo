@@ -16,6 +16,7 @@
 - **Fase 3c — Verificador (14/11/2026).** `scripts/verificar.py` + `.github/workflows/verificar.yml` (segunda, 12:00 de Brasília, e botão manual; só leitura). Confere metadados oficiais, 3 valores por série, atualização, esquema, consistência da página e mandatos; só aponta, nunca corrige. Falhas provocadas numa cópia temporária, todas detectadas: código inexistente, unidade trocada, valor alterado, série velha, JSON fora da lista do painel, mandato incoerente (inclusive o lembrete de janeiro de 2027, testado com `--hoje 2027-01-10`). Rodar: `python3 scripts/verificar.py`.
 - **Site no ar conferido em 14/11/2026 às 16:08:** 16 cartões, 6 destaques, 16 linhas de fonte, nenhum aviso de erro; o robô gerou os 16 arquivos de dados no GitHub (nenhum JSON de teste local foi para o repositório).
 - **Próximo passo:** Fase 4 (notícias). Antes, o usuário revisa a lista "A conferir" abaixo.
+- **Cuidados de texto e de risco (14/11/2026).** Título, abertura e rodapé dizem "não oficial"; "atualizados todos os dias" virou "verificados todos os dias (cada série muda no ritmo da fonte)"; as abas do resumo agora seguem as seis áreas dos indicadores (saiu "Relações exteriores"); o rodapé ganhou aviso e link para as Issues; nova regra 12 no `CLAUDE.md`. Commit e push em 14/11/2026, depois de testar em 360, 768 e 1440 px (sem rolagem lateral).
 
 ## Roteiro de fases
 Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arquivo atualizado.
@@ -62,6 +63,10 @@ Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arqui
 - [ ] Texto de licença usado para os dados do IBGE ("Uso livre com citação da fonte (IBGE)"). Não achei uma licença formal do SIDRA; usei a página que diz que os dados podem ser usados "devendo ser citado como fonte o IBGE": https://biblioteca.ibge.gov.br/biblioteca-servicos.html — confira se concorda com o texto.
 - [ ] Frases de "observação" que aparecem nos cartões (Selic, dólar, PIB, desocupação, rendimento): confira se estão claras e neutras. Ficam no campo `observacao` de `scripts/coletar.py`.
 - [ ] Em janeiro de 2027, edite `data/mandatos.json`: no 3º mandato, ponha `fim` (último dia) e `status: "encerrado"`; no 4º, `status: "em_andamento"`.
+- [x] (Feito em 14/11.) **Commit e push dos cuidados de texto** (`index.html`, `CLAUDE.md`, `STATUS.md`). Antes, veja a página localmente (`python3 -m http.server 8000`) em 360 px e confirme que as 6 abas do resumo não causam rolagem lateral. O robô também faz commits: use `git pull --rebase` antes do push.
+- [ ] **Habilitar as Issues do repositório** (GitHub > Settings > General > Features > Issues), porque o rodapé manda o leitor para lá. Se preferir outro canal de contato, troque o link em `index.html` (e não coloque e-mail pessoal sem querer).
+- [ ] Reler o aviso do rodapé ("projeto pessoal e não oficial...") e decidir se quer uma orientação jurídica específica (advogado ou núcleo de prática jurídica de faculdade de Direito).
+- [ ] Fase 5: o resumo tem uma aba por área de indicadores. "Relações exteriores" saiu por não ter indicador; reintroduza só com critério e fonte.
 
 ## Decisões registradas pelo Claude Code
 (Uma linha por decisão, com o motivo.)
