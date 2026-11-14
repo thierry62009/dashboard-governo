@@ -13,7 +13,7 @@
     "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.13762/dados?formato=json&dataInicial=01/01/2023&dataFinal=14/11/2026",
     "url_pagina": "https://dadosabertos.bcb.gov.br/dataset/13762-divida-bruta-do-governo-geral--pib---metodologia-utilizada-a-partir-de-2008"
   },
-  "extraido_em": "2026-11-14T16:38:08-03:00",
+  "extraido_em": "2026-11-14T16:59:13-03:00",
   "dados": [
     {
       "data": "2023-01",
