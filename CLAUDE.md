@@ -57,25 +57,44 @@ Iniciante em programação (~3h por semana). **Prioridade: receber o trabalho pr
 - A resposta traz `data` como "dd/mm/aaaa" e `valor` como **texto**.
 - Erros já observados: código inexistente dá HTTP 404; data inicial depois da final dá HTTP 400.
 - O IPCA mensal é uma variação %: para acumular, multiplique os fatores (1+v/100); **nunca some**.
+- A série 432 (meta Selic) já vem com **datas futuras** (até a próxima reunião do Copom): descarte o que passar de hoje.
+- O endpoint `ultimos/N` não garante a ordem (algumas séries vêm da mais nova para a mais antiga): ordene sempre.
+- O portal antigo `www3.bcb.gov.br/sgspub` costuma dar HTTP 502 para robôs. Para conferir nome, unidade e periodicidade, use o catálogo `https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=codigo_sgs:{codigo}` (filtre pelo campo `codigo_sgs` exato). Nem toda série está no catálogo (a 433 não está); sem ficha oficial, a série não entra.
+
+## Cuidados com o SIDRA (API do IBGE)
+- Dados: `https://apisidra.ibge.gov.br/values/t/{tabela}/n1/all/v/{variavel}/p/all` (acrescente `/c{classificacao}/{categoria}` quando a tabela tiver classificações). A primeira linha da resposta é o cabeçalho; `V` é **texto** e pode vir `...`, `-` ou `X` quando não há valor.
+- Metadados oficiais (nome, unidade, periodicidade): `https://servicodados.ibge.gov.br/api/v3/agregados/{tabela}/metadados`. Essa resposta vem **compactada (gzip)** mesmo sem pedir.
+- Códigos de período: `aaaamm` no trimestre móvel (mês em que o trimestre termina), `aaaa0t` no trimestral (t = trimestre) e `aaaa` no anual.
+- Erros já observados: tabela ou variável inexistente dá HTTP 400 com texto explicativo.
+- O script confere, a cada execução, se o nome da variável e a unidade continuam iguais aos conferidos; se mudarem, recusa os dados.
+- Séries "reais" (rendimento) são recalculadas pelo IBGE a cada divulgação: os valores antigos mudam.
+
+## Cuidados com o Ipeadata
+- Dados: `https://www.ipeadata.gov.br/api/odata4/ValoresSerie(SERCODIGO='{codigo}')`; metadados em `.../Metadados('{codigo}')` (o `$filter` com `contains` dá HTTP 400).
+- Código inexistente **não dá erro**: vem HTTP 200 com lista vazia. A resposta começa com uma marca invisível (BOM): leia como `utf-8-sig`.
 
 ## Decisões já tomadas
 - **Hospedagem:** GitHub Pages no modo "GitHub Actions" (não "deploy from branch"). O site publicado contém só `index.html`, `assets/` e `data/`; `scripts/` e `.github/` não ficam públicos.
 - **Rotina:** `.github/workflows/atualizar.yml`.
   - Gatilhos: cron `0 12 * * *` (09:00 de Brasília), botão manual e push em `main`.
   - Passos: roda o script, faz commit do JSON (mantém o agendamento ativo), monta `_site` e publica.
-  - Se o script falhar, nada é gravado nem publicado.
-- **Coleta:** só a biblioteca padrão do Python. O script valida os dados (lista não vazia, meses em ordem, sem repetição) e grava via arquivo `.tmp` + `os.replace`.
+  - Se o script terminar com erro (todos os indicadores falharam), nada é gravado nem publicado. Falha de um indicador só vira aviso amarelo na execução.
+- **Coleta:** um script só, `scripts/coletar.py`, com a lista `INDICADORES` (um bloco por indicador). Só a biblioteca padrão do Python. O script valida os dados (lista não vazia, períodos em ordem, sem repetição, sem data futura) e grava via arquivo `.tmp` + `os.replace`. Se um indicador falhar (3 tentativas), o arquivo antigo dele é mantido e os outros seguem; o script só termina com erro se todos falharem.
 - **Formato dos JSON** (`data/xxx.json`):
   ```json
   {
-    "serie": {"codigo", "nome", "unidade", "origem", "fonte", "url_fonte", "licenca"},
+    "serie": {"codigo", "identificacao", "nome", "unidade", "periodicidade", "origem",
+              "fonte", "fonte_sigla", "licenca", "url_licenca", "url_fonte", "url_pagina",
+              "observacao" (opcional)},
     "extraido_em": "ISO com fuso -03:00",
-    "dados": [{"data": "aaaa-mm", "valor": número}]
+    "dados": [{"data": "aaaa-mm", "valor": número, "dia": "aaaa-mm-dd" (só séries diárias)}]
   }
   ```
   Esse formato é mantido para todos os indicadores novos.
+  - `periodicidade`: `mensal`, `trimestre_movel` (data = mês em que o trimestre termina), `trimestral` (data = último mês do trimestre) ou `anual` (data = `aaaa-12`).
+  - Séries diárias (Selic, dólar) guardam só o último dia disponível de cada mês, com o dia exato em `dia`. Nenhum número é calculado pelo painel (nada de médias próprias).
 - **Mandatos:** `data/mandatos.json` lista os mandatos, cada um com `id`, `presidente`, `numero`, `inicio` (aaaa-mm-dd), `fim` (aaaa-mm-dd ou `null`) e `status` (`encerrado`, `em_andamento` ou `futuro`). Hoje: Lula 3º mandato (em andamento, desde 2023-01-01) e Lula 4º mandato (futuro, janeiro de 2027). Os indicadores continuam em um arquivo por série; a página filtra pelo intervalo do mandato escolhido. Para acrescentar um mandato ou presidente, edite só esse arquivo.
-- **Página:** `index.html` + `assets/estilo.css` + `assets/painel.js` (lista `INDICADORES`; para um indicador novo, acrescente um item) + `assets/grafico.js` (colunas em SVG com JS puro, sem bibliotecas nem CDN).
+- **Página:** `index.html` + `assets/estilo.css` + `assets/painel.js` (listas `AREAS` e `INDICADORES`; para um indicador novo, acrescente um item) + `assets/grafico.js` (colunas em SVG com JS puro, sem bibliotecas nem CDN).
 - **Visual:** tema escuro, sem fundo branco.
   - Cores (variáveis no topo do `estilo.css`):
 
@@ -99,7 +118,7 @@ Iniciante em programação (~3h por semana). **Prioridade: receber o trabalho pr
   1. cabeçalho com âncoras;
   2. abertura com o selo "Atualizado em";
   3. cartões de destaque;
-  4. indicadores com botões de período (Desde 2023, 12 e 6 meses);
+  4. indicadores com botões de período (Desde 2023, 12 e 6 meses) e de mandato, agrupados por área;
   5. notícias;
   6. resumo com abas (Economia, Saúde, Educação, Relações exteriores);
   7. rodapé com fonte e licença.
@@ -109,11 +128,12 @@ Iniciante em programação (~3h por semana). **Prioridade: receber o trabalho pr
   - `aria-label` nos gráficos e tabela com os mesmos números;
   - foco visível;
   - funciona de 360 a 1440 px sem rolagem lateral.
-- **Gráfico do IPCA:** colunas a partir do zero, porque é uma variação mensal com meses negativos.
+- **Gráficos:** sempre colunas a partir do zero (não exagera variações e aceita valores negativos), em todos os indicadores.
 
 ## Como rodar localmente
 ```
-python3 scripts/coletar_ipca.py   # atualiza data/ipca.json (descarte antes do commit)
+python3 scripts/coletar.py        # atualiza todos os data/*.json (descarte antes do commit)
+python3 scripts/coletar.py selic  # só os indicadores citados
 python3 -m http.server 8000       # abra http://localhost:8000
 ```
 Para testar como no GitHub, monte a pasta do site como o workflow faz (`_site` com `index.html`, `assets/` e `data/`) e sirva essa pasta.

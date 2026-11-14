@@ -21,8 +21,20 @@ const AREAS = [
 // (casas decimais, prefixo e sufixo). "destaque: true" põe o indicador
 // também nos cartões grandes da abertura.
 const INDICADORES = [
+  // ----- Economia -----
   { id: "ipca", arquivo: "data/ipca.json", area: "economia", titulo: "IPCA",
     casas: 2, sufixo: "%", destaque: true },
+  { id: "selic", arquivo: "data/selic.json", area: "economia", titulo: "Selic (meta)",
+    casas: 2, sufixo: "%", destaque: true },
+  { id: "dolar", arquivo: "data/dolar.json", area: "economia", titulo: "Dólar (venda)",
+    casas: 4, prefixo: "R$ ", destaque: true },
+  { id: "pib", arquivo: "data/pib.json", area: "economia", titulo: "PIB, acumulado em 4 trimestres",
+    casas: 1, sufixo: "%", destaque: true },
+  // ----- Trabalho e renda -----
+  { id: "desocupacao", arquivo: "data/desocupacao.json", area: "trabalho", titulo: "Taxa de desocupação",
+    casas: 1, sufixo: "%", destaque: true },
+  { id: "renda", arquivo: "data/renda.json", area: "trabalho", titulo: "Rendimento médio real do trabalho",
+    casas: 0, prefixo: "R$ " },
 ];
 
 // Valores usados quando o JSON não traz o campo (formato antigo, só do BCB)
