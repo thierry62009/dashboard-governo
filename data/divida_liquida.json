@@ -1,0 +1,199 @@
+{
+  "serie": {
+    "codigo": 4513,
+    "identificacao": "série 4513",
+    "nome": "Dívida Líquida do Setor Público (% PIB) - Total - Setor público consolidado",
+    "unidade": "% do PIB",
+    "periodicidade": "mensal",
+    "origem": "Banco Central do Brasil, Departamento Econômico",
+    "fonte": "Banco Central do Brasil - SGS (Sistema Gerenciador de Séries Temporais)",
+    "fonte_sigla": "BCB/SGS",
+    "licenca": "ODbL (Open Database License) - exige citação da fonte",
+    "url_licenca": "https://opendatacommons.org/licenses/odbl/",
+    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.4513/dados?formato=json&dataInicial=01/01/2023&dataFinal=14/11/2026",
+    "url_pagina": "https://dadosabertos.bcb.gov.br/dataset/4513-divida-liquida-do-setor-publico--pib---total---setor-publico-consolidado"
+  },
+  "extraido_em": "2026-11-14T16:07:59-03:00",
+  "dados": [
+    {
+      "data": "2023-01",
+      "valor": 55.21
+    },
+    {
+      "data": "2023-02",
+      "valor": 55.71
+    },
+    {
+      "data": "2023-03",
+      "valor": 55.98
+    },
+    {
+      "data": "2023-04",
+      "valor": 55.92
+    },
+    {
+      "data": "2023-05",
+      "valor": 56.59
+    },
+    {
+      "data": "2023-06",
+      "valor": 57.78
+    },
+    {
+      "data": "2023-07",
+      "valor": 58.34
+    },
+    {
+      "data": "2023-08",
+      "valor": 58.68
+    },
+    {
+      "data": "2023-09",
+      "valor": 58.87
+    },
+    {
+      "data": "2023-10",
+      "valor": 58.85
+    },
+    {
+      "data": "2023-11",
+      "valor": 59.08
+    },
+    {
+      "data": "2023-12",
+      "valor": 60.43
+    },
+    {
+      "data": "2024-01",
+      "valor": 59.55
+    },
+    {
+      "data": "2024-02",
+      "valor": 60.32
+    },
+    {
+      "data": "2024-03",
+      "valor": 60.59
+    },
+    {
+      "data": "2024-04",
+      "valor": 60.55
+    },
+    {
+      "data": "2024-05",
+      "valor": 61.23
+    },
+    {
+      "data": "2024-06",
+      "valor": 61.28
+    },
+    {
+      "data": "2024-07",
+      "valor": 60.91
+    },
+    {
+      "data": "2024-08",
+      "valor": 61.08
+    },
+    {
+      "data": "2024-09",
+      "valor": 61.46
+    },
+    {
+      "data": "2024-10",
+      "valor": 61.12
+    },
+    {
+      "data": "2024-11",
+      "valor": 60.99
+    },
+    {
+      "data": "2024-12",
+      "valor": 61.3
+    },
+    {
+      "data": "2025-01",
+      "valor": 60.96
+    },
+    {
+      "data": "2025-02",
+      "valor": 61.13
+    },
+    {
+      "data": "2025-03",
+      "valor": 61.3
+    },
+    {
+      "data": "2025-04",
+      "valor": 61.25
+    },
+    {
+      "data": "2025-05",
+      "valor": 61.71
+    },
+    {
+      "data": "2025-06",
+      "valor": 62.6
+    },
+    {
+      "data": "2025-07",
+      "valor": 63.41
+    },
+    {
+      "data": "2025-08",
+      "valor": 64.05
+    },
+    {
+      "data": "2025-09",
+      "valor": 64.57
+    },
+    {
+      "data": "2025-10",
+      "valor": 64.69
+    },
+    {
+      "data": "2025-11",
+      "valor": 65.18
+    },
+    {
+      "data": "2025-12",
+      "valor": 65.24
+    },
+    {
+      "data": "2026-01",
+      "valor": 64.94
+    },
+    {
+      "data": "2026-02",
+      "valor": 65.46
+    },
+    {
+      "data": "2026-03",
+      "valor": 66.67
+    },
+    {
+      "data": "2026-04",
+      "valor": 67.13
+    },
+    {
+      "data": "2026-05",
+      "valor": 67.89
+    },
+    {
+      "data": "2026-06",
+      "valor": 68.49
+    },
+    {
+      "data": "2026-07",
+      "valor": 69.11
+    },
+    {
+      "data": "2026-08",
+      "valor": 69.32
+    },
+    {
+      "data": "2026-09",
+      "valor": 70.0
+    }
+  ]
+}

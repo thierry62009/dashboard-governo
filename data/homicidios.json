@@ -1,0 +1,27 @@
+{
+  "serie": {
+    "codigo": 6606,
+    "identificacao": "tabela 6606, variável 13532",
+    "nome": "Indicador ODS 16.1.1 - Taxa de vítimas de homicídios intencionais",
+    "unidade": "Óbitos por 100 mil habitantes",
+    "periodicidade": "anual",
+    "origem": "IBGE, Objetivos de Desenvolvimento Sustentável",
+    "fonte": "IBGE - SIDRA (Sistema IBGE de Recuperação Automática)",
+    "fonte_sigla": "IBGE/SIDRA",
+    "licenca": "Uso livre com citação da fonte (IBGE)",
+    "url_licenca": "https://biblioteca.ibge.gov.br/biblioteca-servicos.html",
+    "url_fonte": "https://apisidra.ibge.gov.br/values/t/6606/n1/all/v/13532/p/all",
+    "url_pagina": "https://sidra.ibge.gov.br/tabela/6606"
+  },
+  "extraido_em": "2026-11-14T16:08:04-03:00",
+  "dados": [
+    {
+      "data": "2023-12",
+      "valor": 20.52
+    },
+    {
+      "data": "2024-12",
+      "valor": 18.79
+    }
+  ]
+}

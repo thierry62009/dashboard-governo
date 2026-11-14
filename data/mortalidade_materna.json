@@ -1,0 +1,23 @@
+{
+  "serie": {
+    "codigo": 6694,
+    "identificacao": "tabela 6694, variável 9730",
+    "nome": "Indicador ODS 3.1.1 - Razão de mortalidade materna",
+    "unidade": "Óbitos por 100 mil nascidos vivos",
+    "periodicidade": "anual",
+    "origem": "IBGE, Objetivos de Desenvolvimento Sustentável",
+    "fonte": "IBGE - SIDRA (Sistema IBGE de Recuperação Automática)",
+    "fonte_sigla": "IBGE/SIDRA",
+    "licenca": "Uso livre com citação da fonte (IBGE)",
+    "url_licenca": "https://biblioteca.ibge.gov.br/biblioteca-servicos.html",
+    "url_fonte": "https://apisidra.ibge.gov.br/values/t/6694/n1/all/v/9730/p/all",
+    "url_pagina": "https://sidra.ibge.gov.br/tabela/6694"
+  },
+  "extraido_em": "2026-11-14T16:08:01-03:00",
+  "dados": [
+    {
+      "data": "2023-12",
+      "valor": 55.3
+    }
+  ]
+}

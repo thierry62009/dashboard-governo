@@ -1,0 +1,23 @@
+{
+  "serie": {
+    "codigo": 6695,
+    "identificacao": "tabela 6695, variável 9731",
+    "nome": "Indicador ODS 3.2.1 - Taxa de mortalidade em menores de 5 anos",
+    "unidade": "Óbitos por mil nascidos vivos",
+    "periodicidade": "anual",
+    "origem": "IBGE, Objetivos de Desenvolvimento Sustentável",
+    "fonte": "IBGE - SIDRA (Sistema IBGE de Recuperação Automática)",
+    "fonte_sigla": "IBGE/SIDRA",
+    "licenca": "Uso livre com citação da fonte (IBGE)",
+    "url_licenca": "https://biblioteca.ibge.gov.br/biblioteca-servicos.html",
+    "url_fonte": "https://apisidra.ibge.gov.br/values/t/6695/n1/all/v/9731/p/all",
+    "url_pagina": "https://sidra.ibge.gov.br/tabela/6695"
+  },
+  "extraido_em": "2026-11-14T16:08:01-03:00",
+  "dados": [
+    {
+      "data": "2023-12",
+      "valor": 15.1
+    }
+  ]
+}

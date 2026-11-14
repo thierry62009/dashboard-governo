@@ -1,0 +1,31 @@
+{
+  "serie": {
+    "codigo": 4731,
+    "identificacao": "tabela 4731, variável 4721",
+    "nome": "Indicador ODS 4.1.2 - Taxa de conclusão de nível de ensino - Ensino médio - Pessoas de 20 a 22 anos",
+    "unidade": "%",
+    "periodicidade": "anual",
+    "origem": "IBGE, Objetivos de Desenvolvimento Sustentável",
+    "fonte": "IBGE - SIDRA (Sistema IBGE de Recuperação Automática)",
+    "fonte_sigla": "IBGE/SIDRA",
+    "licenca": "Uso livre com citação da fonte (IBGE)",
+    "url_licenca": "https://biblioteca.ibge.gov.br/biblioteca-servicos.html",
+    "url_fonte": "https://apisidra.ibge.gov.br/values/t/4731/n1/all/v/4721/p/all/c582/59997",
+    "url_pagina": "https://sidra.ibge.gov.br/tabela/4731"
+  },
+  "extraido_em": "2026-11-14T16:08:03-03:00",
+  "dados": [
+    {
+      "data": "2023-12",
+      "valor": 74.1
+    },
+    {
+      "data": "2024-12",
+      "valor": 75.1
+    },
+    {
+      "data": "2025-12",
+      "valor": 78.6
+    }
+  ]
+}

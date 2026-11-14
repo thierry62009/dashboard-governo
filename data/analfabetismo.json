@@ -1,0 +1,31 @@
+{
+  "serie": {
+    "codigo": 7113,
+    "identificacao": "tabela 7113, variável 10267",
+    "nome": "Taxa de analfabetismo das pessoas de 15 anos ou mais de idade",
+    "unidade": "%",
+    "periodicidade": "anual",
+    "origem": "IBGE, PNAD Contínua anual",
+    "fonte": "IBGE - SIDRA (Sistema IBGE de Recuperação Automática)",
+    "fonte_sigla": "IBGE/SIDRA",
+    "licenca": "Uso livre com citação da fonte (IBGE)",
+    "url_licenca": "https://biblioteca.ibge.gov.br/biblioteca-servicos.html",
+    "url_fonte": "https://apisidra.ibge.gov.br/values/t/7113/n1/all/v/10267/p/all/c2/6794/c58/2795",
+    "url_pagina": "https://sidra.ibge.gov.br/tabela/7113"
+  },
+  "extraido_em": "2026-11-14T16:08:02-03:00",
+  "dados": [
+    {
+      "data": "2023-12",
+      "valor": 5.4
+    },
+    {
+      "data": "2024-12",
+      "valor": 5.3
+    },
+    {
+      "data": "2025-12",
+      "valor": 4.9
+    }
+  ]
+}
