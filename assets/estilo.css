@@ -37,14 +37,15 @@ body {
 }
 
 /* Títulos e números grandes usam Archivo 800 */
-h1, h2, h3, .numero, .marca {
+h1, h2, h3, h4, .numero, .marca {
   font-family: var(--fonte-titulo);
   font-weight: 800;
   line-height: 1.15;
   margin: 0;
 }
 h2 { font-size: 1.5rem; }
-h3 { font-size: 1.1rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.1rem; }
 
 a { color: var(--link); text-underline-offset: 3px; }
 
@@ -154,7 +155,7 @@ a { color: var(--link); text-underline-offset: 3px; }
 }
 
 /* ---------- Botões (períodos e abas) ---------- */
-.periodos, .abas { display: flex; flex-wrap: wrap; gap: 8px; }
+.periodos, .abas, .botoes-mandato { display: flex; flex-wrap: wrap; gap: 8px; }
 .botao {
   min-height: 44px; padding: 0 16px;
   font-family: var(--fonte-titulo); font-weight: 700; font-size: 0.95rem;
@@ -163,6 +164,16 @@ a { color: var(--link); text-underline-offset: 3px; }
   cursor: pointer;
 }
 .botao:hover { border-color: var(--texto-2); }
+/* Botão desligado (mandato futuro, "Em breve"): tracejado e sem clique */
+.botao:disabled {
+  color: var(--texto-2); border-style: dashed; cursor: not-allowed;
+}
+.botao:disabled:hover { border-color: var(--botao-borda); }
+/* Linha "Mandato:" com os botões de mandato */
+.linha-mandatos {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 8px;
+}
+.linha-mandatos[hidden] { display: none; }
 /* Botão ativo: fundo laranja com texto ESCURO (texto claro reprovaria no contraste) */
 .botao[aria-pressed="true"], .botao[aria-selected="true"] {
   background: var(--laranja); border-color: var(--laranja); color: var(--fundo);
@@ -180,7 +191,15 @@ a { color: var(--link); text-underline-offset: 3px; }
   padding: 18px 20px;
   min-width: 0;  /* deixa o cartão encolher no celular */
 }
-.cartao h3 { margin-bottom: 4px; }
+.cartao h4 { margin-bottom: 4px; }
+/* Título de cada área (Economia, Saúde...) com um traço laranja ao lado */
+.area { margin-top: 28px; }
+.area h3 {
+  margin-bottom: 14px; padding-left: 12px;
+  border-left: 4px solid var(--laranja);
+}
+/* Observação sobre como ler o número (vem junto com os dados) */
+.cartao .nota { margin: 0 0 12px; font-size: 0.9rem; color: var(--texto-2); }
 .cartao .subtitulo { margin: 0 0 12px; color: var(--texto-2); font-size: 0.9rem; }
 
 /* Área do gráfico: a dica (tooltip) é posicionada dentro dela */

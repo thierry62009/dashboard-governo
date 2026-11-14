@@ -1,0 +1,23 @@
+{
+  "_como_editar": "Arquivo editado à mão (não é gerado pelo robô). Para acrescentar um mandato ou presidente, copie um bloco e mude os campos. Datas em aaaa-mm-dd; 'fim' fica null enquanto o mandato não terminou. 'status': encerrado, em_andamento ou futuro.",
+  "mandatos": [
+    {
+      "id": "lula-3",
+      "presidente": "Luiz Inácio Lula da Silva",
+      "nome_curto": "Lula",
+      "numero": 3,
+      "inicio": "2023-01-01",
+      "fim": null,
+      "status": "em_andamento"
+    },
+    {
+      "id": "lula-4",
+      "presidente": "Luiz Inácio Lula da Silva",
+      "nome_curto": "Lula",
+      "numero": 4,
+      "inicio": "2027-01-05",
+      "fim": null,
+      "status": "futuro"
+    }
+  ]
+}

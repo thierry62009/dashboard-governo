@@ -1,35 +1,58 @@
 /* =========================================================================
    painel.js — lê os JSON da pasta data/ e monta a página.
 
-   Para acrescentar um indicador no futuro: o script Python gera um novo
-   data/xxx.json e você acrescenta um item na lista INDICADORES abaixo.
+   Para acrescentar um indicador: o script Python (scripts/coletar.py) gera
+   um novo data/xxx.json e você acrescenta um item na lista INDICADORES.
+   Para acrescentar um mandato ou presidente: edite só data/mandatos.json.
    ========================================================================= */
 
-const INDICADORES = [
-  {
-    id: "ipca",
-    arquivo: "data/ipca.json",
-    titulo: "IPCA",                          // nome curto no cartão
-    descricao: "IPCA, variação % mensal",    // usado na linha de fonte do rodapé
-    unidade: "%",
-    casas: 2,
-  },
+// Áreas da seção "Indicadores", na ordem em que aparecem na página.
+// Uma área só aparece se tiver pelo menos um indicador na lista abaixo.
+const AREAS = [
+  { id: "economia", titulo: "Economia" },
+  { id: "trabalho", titulo: "Trabalho e renda" },
+  { id: "contas", titulo: "Contas públicas" },
+  { id: "saude", titulo: "Saúde" },
+  { id: "educacao", titulo: "Educação" },
+  { id: "seguranca", titulo: "Segurança" },
 ];
 
-const LINK_SGS = "https://www3.bcb.gov.br/sgspub/";
-const LICENCA = "ODbL (Open Data Commons Open Database License)";
-const LINK_LICENCA = "https://opendatacommons.org/licenses/odbl/";
+// Cada item: arquivo de dados, área, nome curto e como escrever o número
+// (casas decimais, prefixo e sufixo). "destaque: true" põe o indicador
+// também nos cartões grandes da abertura.
+const INDICADORES = [
+  { id: "ipca", arquivo: "data/ipca.json", area: "economia", titulo: "IPCA",
+    casas: 2, sufixo: "%", destaque: true },
+];
 
-// Guarda os dados já carregados e o período escolhido nos botões
-const carregados = [];   // [{ config, json }]
-let periodo = "todos";   // "todos", "12" ou "6"
+// Valores usados quando o JSON não traz o campo (formato antigo, só do BCB)
+const PADRAO_FONTE = {
+  sigla: "BCB/SGS",
+  pagina: "https://www3.bcb.gov.br/sgspub/",
+  licenca: "ODbL (Open Data Commons Open Database License)",
+  linkLicenca: "https://opendatacommons.org/licenses/odbl/",
+};
+
+// Estado da página: o que já foi carregado e o que está escolhido nos botões
+const carregados = [];    // [{ config, json }]
+let mandatos = [];        // lista vinda de data/mandatos.json
+let mandatoAtual = null;  // mandato escolhido (null = sem filtro)
+let periodo = "todos";    // "todos", "12" ou "6" (meses)
 
 /* ---------- Pequenas funções de formatação ---------- */
+
+const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 
 // "2026-09" -> "setembro de 2026"
 function mesPorExtenso(aaaaMm) {
   const [ano, mes] = aaaaMm.split("-").map(Number);
   return new Date(ano, mes - 1, 1).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+}
+
+// "2026-11-13" -> "13/11/2026"
+function diaBR(aaaaMmDd) {
+  const [ano, mes, dia] = aaaaMmDd.split("-");
+  return dia + "/" + mes + "/" + ano;
 }
 
 // "2026-11-10T20:42:19-03:00" -> "10/11/2026 às 20:42"
@@ -38,6 +61,34 @@ function dataHora(iso) {
   const opcoes = { timeZone: "America/Sao_Paulo" };
   return d.toLocaleDateString("pt-BR", opcoes) + " às " +
          d.toLocaleTimeString("pt-BR", { ...opcoes, hour: "2-digit", minute: "2-digit" });
+}
+
+// Nome do período de um ponto, conforme a periodicidade da série.
+//   estilo "longo" = frase ("setembro de 2026"), "curto" = dica do gráfico
+//   ("set/2026") e "eixo" = rótulo embaixo do gráfico ("set").
+function nomeDoPeriodo(d, periodicidade, estilo) {
+  const [ano, mes] = d.data.split("-").map(Number);
+  if (periodicidade === "anual") return String(ano);
+  if (periodicidade === "trimestral") {
+    // O arquivo guarda o último mês do trimestre: 03, 06, 09 ou 12
+    const tri = Math.ceil(mes / 3) + "º";
+    if (estilo === "longo") return tri + " trimestre de " + ano;
+    return estilo === "eixo" ? tri + " tri" : tri + " tri/" + ano;
+  }
+  if (periodicidade === "trimestre_movel") {
+    // Trimestre móvel do IBGE: três meses seguidos, terminando no mês guardado
+    const tres = [mes - 3, mes - 2, mes - 1].map(i => MESES[(i + 12) % 12]).join("-");
+    if (estilo === "longo") return "trimestre " + tres + " de " + ano;
+    return estilo === "eixo" ? MESES[mes - 1] : tres + "/" + ano;
+  }
+  // Mensal (e séries diárias guardadas como "último dia de cada mês")
+  if (estilo === "longo") return mesPorExtenso(d.data);
+  return mesCurto(d.data, estilo === "eixo");
+}
+
+// Escreve o número do jeito de cada indicador: "0,82%", "R$ 3.790", "5,65"
+function valorFormatado(config, v) {
+  return (config.prefixo || "") + numeroBR(v, config.casas) + (config.sufixo || "");
 }
 
 // Cria um elemento HTML com classe e texto (textContent nunca interpreta HTML)
@@ -54,56 +105,132 @@ function link(texto, url) {
   return a;
 }
 
-// Recorta os dados conforme o botão de período
+/* ---------- Mandatos e períodos ---------- */
+
+// Um mandato começa e termina em dias quaisquer, mas os dados são mensais.
+// Regra: o mês conta para o mandato que estava em exercício no dia 15.
+function primeiroMes(inicio) {            // "2027-01-05" -> "2027-01"
+  const [ano, mes, dia] = inicio.split("-").map(Number);
+  if (dia <= 15) return inicio.slice(0, 7);
+  return mes === 12 ? (ano + 1) + "-01" : ano + "-" + String(mes + 1).padStart(2, "0");
+}
+function ultimoMes(fim) {                 // "2027-01-04" -> "2026-12"
+  const [ano, mes, dia] = fim.split("-").map(Number);
+  if (dia >= 15) return fim.slice(0, 7);
+  return mes === 1 ? (ano - 1) + "-12" : ano + "-" + String(mes - 1).padStart(2, "0");
+}
+
+// Fica só com os pontos que caem dentro do mandato escolhido
+function noMandato(dados) {
+  if (!mandatoAtual) return dados;
+  const de = primeiroMes(mandatoAtual.inicio);
+  const ate = mandatoAtual.fim ? ultimoMes(mandatoAtual.fim) : "9999-12";
+  return dados.filter(d => d.data >= de && d.data <= ate);   // "aaaa-mm" compara como texto
+}
+
+// Recorta pelos botões de período: os últimos N meses contados a partir do
+// ponto mais recente (assim funciona igual para série mensal, trimestral ou anual)
 function recortar(dados) {
-  return periodo === "todos" ? dados : dados.slice(-Number(periodo));
+  if (periodo === "todos" || !dados.length) return dados;
+  const [ano, mes] = dados[dados.length - 1].data.split("-").map(Number);
+  const total = ano * 12 + (mes - 1) - Number(periodo);      // mês limite (não entra)
+  const limite = Math.floor(total / 12) + "-" + String(total % 12 + 1).padStart(2, "0");
+  return dados.filter(d => d.data > limite);
+}
+
+function nomeDoMandato(m) {
+  return (m.nome_curto || m.presidente) + " · " + m.numero + "º mandato";
+}
+
+// Botões de mandato. Mandato "futuro" aparece desligado, com "Em breve".
+function desenharMandatos() {
+  const caixa = document.getElementById("mandatos");
+  caixa.innerHTML = "";
+  if (!mandatos.length) { document.getElementById("linha-mandatos").hidden = true; return; }
+  for (const m of mandatos) {
+    const futuro = m.status === "futuro";
+    const b = criar("button", "botao", nomeDoMandato(m) + (futuro ? " · Em breve" : ""));
+    b.type = "button";
+    b.disabled = futuro;
+    b.setAttribute("aria-pressed", String(m === mandatoAtual));
+    b.addEventListener("click", () => { mandatoAtual = m; periodo = "todos"; desenharTudo(); });
+    caixa.append(b);
+  }
+  document.getElementById("linha-mandatos").hidden = false;
 }
 
 /* ---------- Montagem de cada parte ---------- */
 
-// Linha curta de fonte: série, origem, data de extração, link e licença
-function linhaDeFonte(config, json) {
+// Junta os campos de fonte do JSON (com valores padrão para o formato antigo)
+function dadosDaFonte(json) {
   const s = json.serie;
+  return {
+    sigla: s.fonte_sigla || PADRAO_FONTE.sigla,
+    pagina: s.url_pagina || PADRAO_FONTE.pagina,
+    identificacao: s.identificacao || "série " + s.codigo,
+    licenca: s.licenca || PADRAO_FONTE.licenca,
+    linkLicenca: s.url_licenca || PADRAO_FONTE.linkLicenca,
+  };
+}
+
+// Linha curta de fonte: série, origem, data de extração, link e licença
+function linhaDeFonte(json) {
+  const s = json.serie, f = dadosDaFonte(json);
   const p = criar("p", "fonte-linha");
   p.append(
-    "Fonte: ", link("BCB/SGS", LINK_SGS), ", série " + s.codigo + " (origem " + s.origem + ") · ",
+    "Fonte: ", link(f.sigla, f.pagina), ", " + f.identificacao + " (origem " + s.origem + ") · ",
     "extraído em " + dataHora(json.extraido_em) + " · ",
-    link("dados da consulta", s.url_fonte), " · Licença ", link("ODbL", LINK_LICENCA)
+    link("dados da consulta", s.url_fonte), " · ", link("licença", f.linkLicenca)
   );
   return p;
 }
 
-// Cartão de destaque da abertura (valor mais recente)
+// Cartão de destaque da abertura (valor mais recente dentro do mandato)
 function cartaoDestaque(config, json) {
-  const ultimo = json.dados[json.dados.length - 1];
+  const dados = noMandato(json.dados);
+  if (!dados.length) return null;
+  const ultimo = dados[dados.length - 1];
+  // Séries diárias guardam o dia exato em "dia"; as outras, só o período
+  const referencia = ultimo.dia ? diaBR(ultimo.dia)
+                                : nomeDoPeriodo(ultimo, json.serie.periodicidade, "longo");
   const c = criar("article", "destaque");
   c.append(
     criar("p", "rotulo", config.titulo + " · " + json.serie.unidade),
-    criar("p", "numero", numeroBR(ultimo.valor, config.casas) + config.unidade),
-    criar("p", "referencia secundario", "Referência: " + mesPorExtenso(ultimo.data)),
-    linhaDeFonte(config, json)
+    criar("p", "numero", valorFormatado(config, ultimo.valor)),
+    criar("p", "referencia secundario", "Referência: " + referencia),
+    linhaDeFonte(json)
   );
   return c;
 }
 
 // Cartão da grade de indicadores: título, gráfico, tabela e fonte
 function cartaoIndicador(config, json) {
-  const dados = recortar(json.dados);
-  const primeiro = dados[0], ultimo = dados[dados.length - 1];
+  const per = json.serie.periodicidade;
+  const dados = recortar(noMandato(json.dados));
   const c = criar("article", "cartao");
+  c.append(criar("h4", "", config.titulo + " · " + json.serie.unidade));
+  c.desenhar = () => {};
 
-  c.append(
-    criar("h3", "", config.titulo + " · " + json.serie.unidade),
-    criar("p", "subtitulo", json.serie.nome + ", de " + mesPorExtenso(primeiro.data) +
-                            " a " + mesPorExtenso(ultimo.data))
-  );
+  if (!dados.length) {
+    c.append(criar("p", "subtitulo", json.serie.nome),
+             criar("p", "secundario", "A fonte ainda não publicou dados para este mandato."),
+             linhaDeFonte(json));
+    return c;
+  }
+
+  const primeiro = dados[0], ultimo = dados[dados.length - 1];
+  const intervalo = dados.length === 1
+    ? nomeDoPeriodo(ultimo, per, "longo")
+    : "de " + nomeDoPeriodo(primeiro, per, "longo") + " a " + nomeDoPeriodo(ultimo, per, "longo");
+  c.append(criar("p", "subtitulo", json.serie.nome + ", " + intervalo));
+  // Observação que vem junto com os dados (ex.: como ler o sinal do número)
+  if (json.serie.observacao) c.append(criar("p", "nota", json.serie.observacao));
 
   // Texto lido por leitores de tela no lugar do desenho
   const valores = dados.map(d => d.valor);
-  const titulo = "Gráfico de colunas: " + config.titulo + ", " + json.serie.unidade +
-    ", de " + mesPorExtenso(primeiro.data) + " a " + mesPorExtenso(ultimo.data) +
-    ". Menor valor " + numeroBR(Math.min(...valores), config.casas) + config.unidade +
-    ", maior valor " + numeroBR(Math.max(...valores), config.casas) + config.unidade +
+  const titulo = "Gráfico de colunas: " + config.titulo + ", " + json.serie.unidade + ", " + intervalo +
+    ". Menor valor " + valorFormatado(config, Math.min(...valores)) +
+    ", maior valor " + valorFormatado(config, Math.max(...valores)) +
     ". Os números estão na tabela logo abaixo.";
 
   const area = criar("div", "grafico");
@@ -114,54 +241,107 @@ function cartaoIndicador(config, json) {
   det.append(criar("summary", "", "Ver os números em tabela"));
   const rolagem = criar("div", "rolagem");
   const tabela = criar("table");
-  tabela.innerHTML = "<thead><tr><th scope='col'>Mês</th><th scope='col'>Valor (" +
-                     config.unidade + ")</th></tr></thead>";
+  const cabeca = criar("thead"), linhaCabeca = criar("tr");
+  for (const texto of ["Período", "Valor (" + json.serie.unidade + ")"]) {
+    const th = criar("th", "", texto);
+    th.scope = "col";
+    linhaCabeca.append(th);
+  }
+  cabeca.append(linhaCabeca);
   const corpo = criar("tbody");
   for (const d of [...dados].reverse()) {
     const tr = criar("tr");
-    tr.append(criar("td", "", mesPorExtenso(d.data)), criar("td", "", numeroBR(d.valor, config.casas)));
+    const nome = nomeDoPeriodo(d, per, "longo") + (d.dia ? " (dia " + diaBR(d.dia) + ")" : "");
+    tr.append(criar("td", "", nome), criar("td", "", numeroBR(d.valor, config.casas)));
     corpo.append(tr);
   }
-  tabela.append(corpo);
+  tabela.append(cabeca, corpo);
   rolagem.append(tabela);
   det.append(rolagem);
-  c.append(det, linhaDeFonte(config, json));
+  c.append(det, linhaDeFonte(json));
 
   // O gráfico precisa saber a largura do cartão, então é desenhado depois
-  // que o cartão entra na página (ver desenharGraficos).
-  c.desenhar = () => desenharColunas(area, dados, { titulo, unidade: config.unidade });
+  // que o cartão entra na página (ver desenharGrade).
+  c.desenhar = () => desenharColunas(area, dados, {
+    titulo,
+    formatar: v => valorFormatado(config, v),
+    rotulo: (d, estilo) => nomeDoPeriodo(d, per, estilo),
+  });
   return c;
 }
 
 // Linha de fonte do rodapé (texto completo pedido para a licença)
 function fonteRodape(config, json) {
-  const s = json.serie;
+  const s = json.serie, f = dadosDaFonte(json);
   const li = criar("li");
   li.append(
-    "Fonte: ", link("Banco Central do Brasil, SGS", LINK_SGS),
-    ", série " + s.codigo + " (" + config.descricao + "; origem " + s.origem + "). ",
-    "Extraído em " + dataHora(json.extraido_em) + ". Licença: ",
-    link(LICENCA, LINK_LICENCA), "."
+    criar("strong", "", config.titulo + ": "),
+    link(s.fonte, f.pagina), ", " + f.identificacao + " (" + s.nome + "; " + s.unidade +
+    "; origem " + s.origem + "). Extraído em " + dataHora(json.extraido_em) + ". Licença: ",
+    link(f.licenca, f.linkLicenca), "."
   );
   return li;
 }
 
 /* ---------- Desenho e eventos ---------- */
 
+// Cartões de destaque da abertura
+function desenharDestaques() {
+  const caixa = document.getElementById("destaques");
+  caixa.innerHTML = "";
+  for (const { config, json } of carregados) {
+    if (!config.destaque) continue;
+    const cartao = cartaoDestaque(config, json);
+    if (cartao) caixa.append(cartao);
+  }
+}
+
+// Grade de indicadores, separada por área (Economia, Saúde...)
 function desenharGrade() {
-  const grade = document.getElementById("grade-indicadores");
-  grade.innerHTML = "";
-  const cartoes = carregados.map(({ config, json }) => cartaoIndicador(config, json));
-  grade.append(...cartoes);
+  const caixa = document.getElementById("areas");
+  caixa.innerHTML = "";
+  const cartoes = [];
+  for (const area of AREAS) {
+    const daArea = carregados.filter(c => c.config.area === area.id);
+    if (!daArea.length) continue;
+    const secao = criar("section", "area");
+    const h3 = criar("h3", "", area.titulo);
+    h3.id = "area-" + area.id;
+    secao.setAttribute("aria-labelledby", h3.id);
+    const grade = criar("div", "grade");
+    for (const { config, json } of daArea) {
+      const cartao = cartaoIndicador(config, json);
+      grade.append(cartao);
+      cartoes.push(cartao);
+    }
+    secao.append(h3, grade);
+    caixa.append(secao);
+  }
   cartoes.forEach(c => c.desenhar());
 }
 
-// Botões de período: marca o clicado como ativo (aria-pressed) e redesenha
+// Marca o botão de período ativo e escreve "Desde 2023" conforme o mandato
+function desenharPeriodos() {
+  document.querySelectorAll(".botao[data-meses]").forEach(b => {
+    b.setAttribute("aria-pressed", String(b.dataset.meses === periodo));
+    if (b.dataset.meses === "todos" && mandatoAtual) {
+      b.textContent = mandatoAtual.fim ? "Mandato inteiro" : "Desde " + mandatoAtual.inicio.slice(0, 4);
+    }
+  });
+}
+
+function desenharTudo() {
+  desenharMandatos();
+  desenharPeriodos();
+  desenharDestaques();
+  desenharGrade();
+}
+
+// Botões de período: guardam a escolha e redesenham os gráficos
 function ligarBotoesDePeriodo() {
-  const botoes = document.querySelectorAll(".periodos .botao");
-  botoes.forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".botao[data-meses]").forEach(b => b.addEventListener("click", () => {
     periodo = b.dataset.meses;
-    botoes.forEach(o => o.setAttribute("aria-pressed", String(o === b)));
+    desenharPeriodos();
     desenharGrade();
   }));
 }
@@ -198,21 +378,39 @@ window.addEventListener("resize", () => {
 
 /* ---------- Início: baixa os JSON e preenche a página ---------- */
 
+async function baixarJson(arquivo) {
+  const resposta = await fetch(arquivo, { cache: "no-cache" });
+  if (!resposta.ok) throw new Error("HTTP " + resposta.status);
+  return resposta.json();
+}
+
+function avisar(texto) {
+  const aviso = document.getElementById("aviso-erro");
+  aviso.hidden = false;
+  aviso.textContent += texto + " ";
+}
+
 async function iniciar() {
   ligarBotoesDePeriodo();
   ligarAbas();
 
-  for (const config of INDICADORES) {
-    try {
-      const resposta = await fetch(config.arquivo, { cache: "no-cache" });
-      if (!resposta.ok) throw new Error("HTTP " + resposta.status);
-      carregados.push({ config, json: await resposta.json() });
-    } catch (erro) {
-      const aviso = document.getElementById("aviso-erro");
-      aviso.hidden = false;
-      aviso.textContent += "Não foi possível carregar " + config.titulo + " (" + erro.message + "). ";
-    }
+  // 1) Mandatos: escolhe o que está em andamento. Se o arquivo falhar,
+  //    a página mostra todos os dados, sem filtro, e avisa.
+  try {
+    mandatos = (await baixarJson("data/mandatos.json")).mandatos;
+    mandatoAtual = mandatos.find(m => m.status === "em_andamento") ||
+                   [...mandatos].reverse().find(m => m.status === "encerrado") || null;
+  } catch (erro) {
+    avisar("Não foi possível carregar a lista de mandatos (" + erro.message + ").");
   }
+
+  // 2) Indicadores: baixa todos ao mesmo tempo; um que falhe não derruba os outros
+  const respostas = await Promise.allSettled(INDICADORES.map(c => baixarJson(c.arquivo)));
+  respostas.forEach((r, i) => {
+    const config = INDICADORES[i];
+    if (r.status === "fulfilled") carregados.push({ config, json: r.value });
+    else avisar("Não foi possível carregar " + config.titulo + " (" + r.reason.message + ").");
+  });
   if (!carregados.length) return;
 
   // "Atualizado em": a extração mais recente entre os indicadores carregados
@@ -225,10 +423,9 @@ async function iniciar() {
     "Última atualização dos dados: " + dataHora(maisRecente) + " (horário de Brasília).";
 
   for (const { config, json } of carregados) {
-    document.getElementById("destaques").append(cartaoDestaque(config, json));
     document.getElementById("lista-fontes").append(fonteRodape(config, json));
   }
-  desenharGrade();
+  desenharTudo();
 }
 
 iniciar();
