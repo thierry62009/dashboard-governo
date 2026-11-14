@@ -1,0 +1,31 @@
+# Verificação semanal: confere os indicadores com as fontes oficiais.
+# Só APONTA problemas: não faz commit, não altera dados e não publica o site.
+# O relatório aparece na página da execução (aba "Summary").
+name: Verificar indicadores
+
+on:
+  schedule:
+    # Toda segunda-feira às 15:00 UTC (= 12:00 em Brasília), longe da rotina das 09:00.
+    - cron: "0 15 * * 1"
+  workflow_dispatch:   # botão "Run workflow" para rodar na mão
+
+# Só leitura: este workflow não pode gravar nada no repositório.
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código do repositório
+        uses: actions/checkout@v7
+
+      - name: Instalar Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Rodar o verificador
+        # Se houver ERRO, esta etapa fica vermelha (o e-mail do GitHub avisa).
+        # Avisos não falham a execução; aparecem no relatório.
+        run: python scripts/verificar.py

@@ -75,6 +75,7 @@ Iniciante em programação (~3h por semana). **Prioridade: receber o trabalho pr
 
 ## Decisões já tomadas
 - **Hospedagem:** GitHub Pages no modo "GitHub Actions" (não "deploy from branch"). O site publicado contém só `index.html`, `assets/` e `data/`; `scripts/` e `.github/` não ficam públicos.
+- **Verificador:** `scripts/verificar.py` lê a lista de `scripts/coletar.py` (fonte única dos códigos) e confere metadados oficiais, 3 valores por série (por um endereço diferente do da coleta), atualização, esquema dos JSON, consistência com `painel.js` e `mandatos.json`. Só aponta: nunca corrige nem grava em `data/` ou `assets/`. Sai com código 1 se houver erro. Roda toda segunda às 12:00 de Brasília por `.github/workflows/verificar.yml` (só leitura, sem commit) e pelo botão manual.
 - **Rotina:** `.github/workflows/atualizar.yml`.
   - Gatilhos: cron `0 12 * * *` (09:00 de Brasília), botão manual e push em `main`.
   - Passos: roda o script, faz commit do JSON (mantém o agendamento ativo), monta `_site` e publica.
@@ -134,6 +135,7 @@ Iniciante em programação (~3h por semana). **Prioridade: receber o trabalho pr
 ```
 python3 scripts/coletar.py        # atualiza todos os data/*.json (descarte antes do commit)
 python3 scripts/coletar.py selic  # só os indicadores citados
+python3 scripts/verificar.py      # confere tudo com as fontes oficiais (só aponta; não grava nada)
 python3 -m http.server 8000       # abra http://localhost:8000
 ```
 Para testar como no GitHub, monte a pasta do site como o workflow faz (`_site` com `index.html`, `assets/` e `data/`) e sirva essa pasta.
