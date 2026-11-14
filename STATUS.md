@@ -13,6 +13,8 @@
   - Saúde e segurança são indicadores **anuais e com atraso** da fonte: saúde só tem 2023 dentro do mandato; homicídios vão até 2024. Os gráficos têm 1 ou 2 colunas.
   - Segurança ficou com **1 indicador**: não achei outra série nacional de segurança com API oficial estável (os dados do Sinesp/Ministério da Justiça saem em planilhas, sem API).
   - Saúde: cobertura vacinal e outros dados do DataSUS não têm API simples e estável; ficaram de fora.
+- **Site no ar conferido em 14/11/2026 às 16:08:** 16 cartões, 6 destaques, 16 linhas de fonte, nenhum aviso de erro; o robô gerou os 16 arquivos de dados no GitHub (nenhum JSON de teste local foi para o repositório).
+- **Próximo passo:** Fase 4 (notícias). Antes, o usuário revisa a lista "A conferir" abaixo.
 
 ## Roteiro de fases
 Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arquivo atualizado.
@@ -30,7 +32,7 @@ Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arqui
 - [ ] Comparar valores do gráfico com o SGS (fev/2025 = 1,31; ago/2026 = −0,32): https://www3.bcb.gov.br/sgspub/
 - [ ] O usuário deve conferir se o título e a frase de apoio da abertura estão neutros.
 - [ ] O usuário deve ver o visual no próprio celular.
-- [ ] Confirmar no próximo commit do robô que a mensagem sai no horário de Brasília (formato "Dados atualizados em dd/mm/aaaa às hh:mm (Brasília)", alterado em 11/11).
+- [x] (Conferido em 14/11: "Dados atualizados em 14/11/2026 às 16:08 (Brasília)".) Confirmar no próximo commit do robô que a mensagem sai no horário de Brasília (formato "Dados atualizados em dd/mm/aaaa às hh:mm (Brasília)", alterado em 11/11).
 - [ ] Atenção: o `ubuntu-latest` está migrando para o Ubuntu 26. Se o passo "Instalar Python" falhar, ajuste a versão do Python no workflow.
 - [ ] **Data de início do 4º mandato em `data/mandatos.json`: 05/01/2027.** Usei a Emenda Constitucional 111/2021 (posse do presidente em 5 de janeiro a partir de 2027). Confira o art. 82 em https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc111.htm — se estiver diferente, mude só o campo `inicio`.
 - [ ] **Códigos da Fase 3 (revisão em lote).** Abra cada link e confira nome, unidade e periodicidade:
