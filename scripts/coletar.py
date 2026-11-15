@@ -55,13 +55,17 @@ FONTES = {
     "sidra": {
         "fonte": "IBGE - SIDRA (Sistema IBGE de Recuperação Automática)",
         "fonte_sigla": "IBGE/SIDRA",
-        "licenca": "Uso livre com citação da fonte (IBGE)",
-        "url_licenca": "https://biblioteca.ibge.gov.br/biblioteca-servicos.html",
+        # Não há licença formal do IBGE confirmada: o texto só cita a fonte, sem
+        # afirmar licença. Sem página oficial que abra para robôs, o link fica vazio
+        # (o painel mostra o texto sem link).
+        "licenca": "Dados do IBGE (SIDRA); fonte citada conforme orientação do IBGE",
+        "url_licenca": "",
     },
     "ipea": {
         "fonte": "Ipeadata (Instituto de Pesquisa Econômica Aplicada)",
         "fonte_sigla": "Ipeadata",
-        "licenca": "Uso público com citação da fonte (Ipeadata)",
+        # Texto conferido em 14/11/2026 na página "Direitos de Uso" do Ipeadata
+        "licenca": "Informação pública, que pode ser distribuída e copiada com citação da fonte Ipeadata",
         "url_licenca": "http://www.ipeadata.gov.br/iframe_direitouso.aspx",
     },
 }
@@ -114,7 +118,9 @@ INDICADORES = [
         "unidade": "%", "origem": "IBGE, Contas Nacionais Trimestrais",
         "periodicidade": "trimestral",
         "observacao": "Variação do volume do PIB nos quatro trimestres terminados no trimestre "
-                      "indicado, em relação aos quatro trimestres anteriores.",
+                      "indicado, em relação aos quatro trimestres anteriores. Os pontos de "
+                      "março, junho e setembro de 2023 incluem trimestres de 2022, porque "
+                      "cada ponto cobre quatro trimestres.",
     },
     # ----- Trabalho e renda -----
     {
@@ -125,7 +131,8 @@ INDICADORES = [
         "unidade": "%", "origem": "IBGE, PNAD Contínua",
         "periodicidade": "trimestre_movel",
         "observacao": "Cada ponto se refere a um trimestre móvel: três meses seguidos, "
-                      "terminados no mês indicado.",
+                      "terminados no mês indicado. Os pontos de janeiro e fevereiro de 2023 "
+                      "incluem meses de 2022, porque cada ponto cobre três meses.",
     },
     {
         "id": "renda", "tipo": "sidra", "tabela": 6390, "variavel": 5933,

@@ -95,6 +95,9 @@ VALOR_IPEA = "https://www.ipeadata.gov.br/api/odata4/Metadados('{codigo}')/Valor
 
 CAMPOS_SERIE = ["codigo", "identificacao", "nome", "unidade", "periodicidade", "origem",
                 "fonte", "fonte_sigla", "licenca", "url_licenca", "url_fonte", "url_pagina"]
+# Pode ficar vazio (mas precisa existir): o IBGE não tem página oficial de licença
+# que abra para robôs, então o link da licença fica em branco e o painel mostra só o texto.
+CAMPOS_PODEM_FICAR_VAZIOS = {"url_licenca"}
 
 
 # ---------------------------------------------------------------------------
@@ -343,8 +346,10 @@ def checar_esquema(json_, r, diaria):
         r.erros.append("Falta o bloco 'serie'.")
         return
     for campo in CAMPOS_SERIE:
-        if campo not in s or s[campo] in (None, ""):
-            r.erros.append(f"Campo serie.{campo} ausente ou vazio.")
+        if campo not in s or s[campo] is None:
+            r.erros.append(f"Campo serie.{campo} ausente.")
+        elif s[campo] == "" and campo not in CAMPOS_PODEM_FICAR_VAZIOS:
+            r.erros.append(f"Campo serie.{campo} vazio.")
     if not isinstance(s.get("codigo"), (int, str)):
         r.erros.append("serie.codigo deveria ser número ou texto.")
     for campo in ("url_fonte", "url_pagina", "url_licenca"):

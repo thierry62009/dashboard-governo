@@ -205,8 +205,21 @@ function dadosDaFonte(json) {
     pagina: s.url_pagina || PADRAO_FONTE.pagina,
     identificacao: s.identificacao || "série " + s.codigo,
     licenca: s.licenca || PADRAO_FONTE.licenca,
-    linkLicenca: s.url_licenca || PADRAO_FONTE.linkLicenca,
+    // Campo ausente = formato antigo (BCB). Campo vazio = a fonte não tem página
+    // oficial de licença confirmada (IBGE): o texto aparece sem link.
+    linkLicenca: "url_licenca" in s ? s.url_licenca : PADRAO_FONTE.linkLicenca,
   };
+}
+
+// Um ponto de série diária é de "mês em andamento" quando é do mesmo mês da
+// extração (as duas datas vêm do JSON; nada é calculado sobre os valores).
+function mesEmAndamento(d, json) {
+  return Boolean(d.dia) && d.data === json.extraido_em.slice(0, 7);
+}
+
+// "mês em andamento, até 14/11"
+function textoEmAndamento(d) {
+  return "mês em andamento, até " + diaBR(d.dia).slice(0, 5);
 }
 
 // Linha curta de fonte: série, origem, data de extração, link e licença
@@ -216,7 +229,9 @@ function linhaDeFonte(json) {
   p.append(
     "Fonte: ", link(f.sigla, f.pagina), ", " + f.identificacao + " (origem " + s.origem + ") · ",
     "extraído em " + dataHora(json.extraido_em) + " · ",
-    link("dados da consulta", s.url_fonte), " · ", link("licença", f.linkLicenca)
+    link("dados da consulta", s.url_fonte), " · ",
+    // Sem página de licença: mostra o texto de citação (ex.: IBGE)
+    f.linkLicenca ? link("licença", f.linkLicenca) : f.licenca
   );
   return p;
 }
@@ -227,8 +242,9 @@ function cartaoDestaque(config, json) {
   if (!dados.length) return null;
   const ultimo = dados[dados.length - 1];
   // Séries diárias guardam o dia exato em "dia"; as outras, só o período
-  const referencia = ultimo.dia ? diaBR(ultimo.dia)
-                                : nomeDoPeriodo(ultimo, json.serie.periodicidade, "longo");
+  let referencia = ultimo.dia ? diaBR(ultimo.dia)
+                              : nomeDoPeriodo(ultimo, json.serie.periodicidade, "longo");
+  if (mesEmAndamento(ultimo, json)) referencia += " (" + textoEmAndamento(ultimo) + ")";
   const c = criar("article", "destaque");
   c.append(
     criar("p", "rotulo", config.titulo + " · " + json.serie.unidade),
@@ -271,6 +287,11 @@ function cartaoIndicador(config, json) {
 
   const area = criar("div", "grafico");
   c.append(area);
+  // Último mês ainda não terminou (Selic, dólar): avisa embaixo do gráfico
+  if (mesEmAndamento(ultimo, json)) {
+    c.append(criar("p", "nota", "A última coluna (" + nomeDoPeriodo(ultimo, per, "curto") +
+      ") é do " + textoEmAndamento(ultimo) + "/" + ultimo.dia.slice(0, 4) + "."));
+  }
 
   // Tabela com os mesmos números do gráfico (mais recente primeiro)
   const det = criar("details");
@@ -287,7 +308,8 @@ function cartaoIndicador(config, json) {
   const corpo = criar("tbody");
   for (const d of [...dados].reverse()) {
     const tr = criar("tr");
-    const nome = nomeDoPeriodo(d, per, "longo") + (d.dia ? " (dia " + diaBR(d.dia) + ")" : "");
+    const nome = nomeDoPeriodo(d, per, "longo") +
+      (d.dia ? " (dia " + diaBR(d.dia) + (mesEmAndamento(d, json) ? ", mês em andamento" : "") + ")" : "");
     tr.append(criar("td", "", nome), criar("td", "", numeroBR(d.valor, config.casas)));
     corpo.append(tr);
   }
@@ -301,7 +323,9 @@ function cartaoIndicador(config, json) {
   c.desenhar = () => desenharColunas(area, dados, {
     titulo,
     formatar: v => valorFormatado(config, v),
-    rotulo: (d, estilo) => nomeDoPeriodo(d, per, estilo),
+    // Na dica do gráfico, o mês em andamento ganha o aviso "até dd/mm"
+    rotulo: (d, estilo) => nomeDoPeriodo(d, per, estilo) +
+      (estilo === "curto" && mesEmAndamento(d, json) ? " (" + textoEmAndamento(d) + ")" : ""),
   });
   return c;
 }
@@ -313,8 +337,10 @@ function fonteRodape(config, json) {
   li.append(
     criar("strong", "", config.titulo + ": "),
     link(s.fonte, f.pagina), ", " + f.identificacao + " (" + s.nome + "; " + s.unidade +
-    "; origem " + s.origem + "). Extraído em " + dataHora(json.extraido_em) + ". Licença: ",
-    link(f.licenca, f.linkLicenca), "."
+    "; origem " + s.origem + "). Extraído em " + dataHora(json.extraido_em) + ". ",
+    // Com página de licença: "Licença: <link>". Sem (IBGE): "Uso dos dados: <texto>"
+    f.linkLicenca ? "Licença: " : "Uso dos dados: ",
+    f.linkLicenca ? link(f.licenca, f.linkLicenca) : f.licenca, "."
   );
   return li;
 }

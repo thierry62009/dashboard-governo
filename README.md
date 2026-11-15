@@ -18,9 +18,22 @@ python3 -m http.server 8000          # depois abra http://localhost:8000
 ```
 Abrir o `index.html` direto (duplo clique) não funciona: o navegador bloqueia a leitura do JSON fora de um servidor.
 
-## Fontes e licença dos dados
-Cada número da página mostra a série ou tabela, a data de extração, o link e a licença.
-- Banco Central do Brasil, SGS (https://www3.bcb.gov.br/sgspub/ e https://dadosabertos.bcb.gov.br/):
-  licença ODbL (Open Database License), que exige citação da fonte.
-- IBGE, SIDRA (https://sidra.ibge.gov.br/): uso com citação da fonte.
-- Ipeadata (http://www.ipeadata.gov.br/): uso público com citação da fonte.
+## Fontes dos dados
+Cada número da página mostra a série ou tabela, a data de extração, o link da fonte e a licença ou o texto de citação.
+- Banco Central do Brasil, SGS (https://dadosabertos.bcb.gov.br/).
+- IBGE, SIDRA (https://sidra.ibge.gov.br/).
+- Ipeadata (http://www.ipeadata.gov.br/).
+
+## Licença dos dados
+- **Séries do Banco Central (BCB/SGS):** os dados do BCB são publicados sob a
+  [ODbL (Open Database License)](https://opendatacommons.org/licenses/odbl/). Os arquivos
+  `data/*.json` gerados a partir dessas séries são uma base derivada e seguem a mesma ODbL:
+  quem reutilizar deve atribuir a fonte ao Banco Central do Brasil e manter a base derivada
+  sob a mesma licença.
+- **Tabelas do IBGE (SIDRA):** não há licença formal confirmada para esses dados. Os arquivos
+  trazem a fonte citada ("Dados do IBGE (SIDRA); fonte citada conforme orientação do IBGE"),
+  sem afirmar licença.
+- **Séries do Ipeadata:** os arquivos trazem a fonte citada. A página
+  [Direitos de Uso do Ipeadata](http://www.ipeadata.gov.br/iframe_direitouso.aspx) diz que o
+  conteúdo é informação pública que pode ser distribuída e copiada, com citação da fonte Ipeadata.
+- **Código do projeto** (`scripts/`, `assets/`, `index.html`, `.github/`): licença a definir.
