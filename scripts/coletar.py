@@ -245,11 +245,15 @@ INDICADORES = [
 TAMANHO_MAXIMO = 20 * 1024 * 1024   # 20 MB: a maior resposta real tem menos de 1 MB
 
 
+class FalhaDefinitiva(ValueError):
+    """Falha que não adianta repetir: redirecionamento recusado ou resposta grande demais."""
+
+
 class _SoHttps(urllib.request.HTTPRedirectHandler):
     """Recusa redirecionamentos para endereços que não sejam https."""
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         if not newurl.lower().startswith("https://"):
-            raise ValueError(f"Redirecionamento recusado (não é https): {newurl[:200]}")
+            raise FalhaDefinitiva(f"Redirecionamento recusado (não é https): {newurl[:200]}")
         return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
@@ -260,12 +264,12 @@ def ler_com_limite(resposta):
     """Lê a resposta até TAMANHO_MAXIMO e descompacta (gzip) também com limite."""
     bruto = resposta.read(TAMANHO_MAXIMO + 1)
     if len(bruto) > TAMANHO_MAXIMO:
-        raise ValueError("Resposta grande demais (mais de 20 MB): recusada.")
+        raise FalhaDefinitiva("Resposta grande demais (mais de 20 MB): recusada.")
     if bruto[:2] == b"\x1f\x8b":            # resposta compactada (o IBGE faz isso mesmo sem pedir)
         # max_length impede uma "bomba" de gzip: um arquivo pequeno que vira gigante
         bruto = zlib.decompressobj(wbits=31).decompress(bruto, TAMANHO_MAXIMO + 1)
         if len(bruto) > TAMANHO_MAXIMO:
-            raise ValueError("Resposta compactada grande demais (mais de 20 MB): recusada.")
+            raise FalhaDefinitiva("Resposta compactada grande demais (mais de 20 MB): recusada.")
     return bruto
 
 
@@ -295,7 +299,8 @@ def baixar_json(url):
             return json.loads(bruto.decode("utf-8-sig"))
         except Exception as erro:
             # Erro 4xx é pedido errado (código inexistente etc.): repetir não adianta.
-            definitivo = getattr(erro, "code", 0) in range(400, 500)
+            # Redirecionamento recusado e resposta grande demais também são definitivos.
+            definitivo = getattr(erro, "code", 0) in range(400, 500) or isinstance(erro, FalhaDefinitiva)
             if definitivo or tentativa == TENTATIVAS:
                 raise
             print(f"  Tentativa {tentativa} falhou ({texto_seguro(erro)}); esperando {espera}s...")

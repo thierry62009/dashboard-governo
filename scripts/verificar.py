@@ -116,11 +116,15 @@ SERVIDORES_FORA = set()
 TAMANHO_MAXIMO = 20 * 1024 * 1024   # 20 MB: a maior resposta real tem menos de 1 MB
 
 
+class FalhaDefinitiva(ValueError):
+    """Falha que não adianta repetir: redirecionamento recusado ou resposta grande demais."""
+
+
 class _SoHttps(urllib.request.HTTPRedirectHandler):
     """Recusa redirecionamentos para endereços que não sejam https."""
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         if not newurl.lower().startswith("https://"):
-            raise ValueError(f"Redirecionamento recusado (não é https): {newurl[:200]}")
+            raise FalhaDefinitiva(f"Redirecionamento recusado (não é https): {newurl[:200]}")
         return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
@@ -131,12 +135,12 @@ def ler_com_limite(resposta):
     """Lê a resposta até TAMANHO_MAXIMO e descompacta (gzip) também com limite."""
     bruto = resposta.read(TAMANHO_MAXIMO + 1)
     if len(bruto) > TAMANHO_MAXIMO:
-        raise ValueError("Resposta grande demais (mais de 20 MB): recusada.")
+        raise FalhaDefinitiva("Resposta grande demais (mais de 20 MB): recusada.")
     if bruto[:2] == b"\x1f\x8b":            # resposta compactada (o IBGE faz isso mesmo sem pedir)
         # max_length impede uma "bomba" de gzip: um arquivo pequeno que vira gigante
         bruto = zlib.decompressobj(wbits=31).decompress(bruto, TAMANHO_MAXIMO + 1)
         if len(bruto) > TAMANHO_MAXIMO:
-            raise ValueError("Resposta compactada grande demais (mais de 20 MB): recusada.")
+            raise FalhaDefinitiva("Resposta compactada grande demais (mais de 20 MB): recusada.")
     return bruto
 
 
@@ -167,6 +171,8 @@ def baixar(url, como_json=True):
             if 400 <= e.code < 500:               # pedido errado: repetir não adianta
                 raise
             ultimo = e
+        except FalhaDefinitiva as e:              # repetir não adianta; o servidor não é marcado como fora
+            raise ErroDeRede(f"{texto_seguro(e)} (falha definitiva, sem nova tentativa)")
         except Exception as e:                    # timeout, conexão caiu etc.
             ultimo = e
         if tentativa < NOVAS_TENTATIVAS:
@@ -477,6 +483,15 @@ def checar_mandatos(raiz, r, hoje):
                 r.erros.append(f"Mandato {nome}: falta o campo {campo}.")
         if m.get("status") not in ("encerrado", "em_andamento", "futuro"):
             r.erros.append(f"Mandato {nome}: status inválido {m.get('status')!r}.")
+        # Mandato em andamento ou futuro precisa dizer de onde vem a data (texto + link https).
+        # Só o formato é conferido: o site do TSE recusa acessos automáticos (HTTP 403).
+        if m.get("status") in ("em_andamento", "futuro"):
+            if not (isinstance(m.get("fonte"), str) and m["fonte"].strip()):
+                r.erros.append(f"Mandato {nome}: falta o campo 'fonte' (texto dizendo de onde vem a data).")
+            link = urllib.parse.urlsplit(str(m.get("url_fonte") or ""))
+            if link.scheme != "https" or not link.netloc:
+                r.erros.append(f"Mandato {nome}: 'url_fonte' ausente ou não é um link https: "
+                               f"{texto_seguro(m.get('url_fonte'))!r}.")
         try:
             ini = date.fromisoformat(m["inicio"])
             fim = date.fromisoformat(m["fim"]) if m.get("fim") else None

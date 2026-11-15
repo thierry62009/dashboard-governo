@@ -191,12 +191,25 @@ function desenharMandatos() {
     const futuro = m.status === "futuro";
     const b = criar("button", "botao", nomeDoMandato(m) + (futuro ? " · Em breve" : ""));
     b.type = "button";
+    if (!futuro && m.fonte) b.title = "Fonte: " + m.fonte;
     b.disabled = futuro;
     b.setAttribute("aria-pressed", String(m === mandatoAtual));
     b.addEventListener("click", () => { mandatoAtual = m; periodo = "todos"; desenharTudo(); });
     caixa.append(b);
   }
   document.getElementById("linha-mandatos").hidden = false;
+
+  // Embaixo dos botões: de onde vem a data de cada mandato que ainda não começou.
+  // O texto e o link vêm do mandatos.json (campos "fonte" e "url_fonte").
+  const fontes = document.getElementById("fontes-mandatos");
+  fontes.innerHTML = "";
+  for (const m of mandatos) {
+    if (m.status !== "futuro" || !m.fonte) continue;
+    const p = criar("p", "nota", nomeDoMandato(m) + ". Fonte: ");
+    p.append(link(m.fonte, m.url_fonte), ".");
+    fontes.append(p);
+  }
+  fontes.hidden = !fontes.children.length;
 }
 
 /* ---------- Montagem de cada parte ---------- */

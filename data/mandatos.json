@@ -1,5 +1,5 @@
 {
-  "_como_editar": "Arquivo editado à mão (não é gerado pelo robô). Para acrescentar um mandato ou presidente, copie um bloco e mude os campos. Datas em aaaa-mm-dd; 'fim' fica null enquanto o mandato não terminou. 'status': encerrado, em_andamento ou futuro.",
+  "_como_editar": "Arquivo editado à mão (não é gerado pelo robô). Para acrescentar um mandato ou presidente, copie um bloco e mude os campos. Datas em aaaa-mm-dd; 'fim' fica null enquanto o mandato não terminou. 'status': encerrado, em_andamento ou futuro. 'fonte' e 'url_fonte' (link https de página oficial) dizem de onde vem a data; são obrigatórios nos mandatos em_andamento e futuro.",
   "mandatos": [
     {
       "id": "lula-3",
@@ -8,7 +8,9 @@
       "numero": 3,
       "inicio": "2023-01-01",
       "fim": null,
-      "status": "em_andamento"
+      "status": "em_andamento",
+      "fonte": "Agência Senado (Senado Federal): o Congresso Nacional deu posse ao presidente e ao vice-presidente em 1º de janeiro de 2023",
+      "url_fonte": "https://www12.senado.leg.br/noticias/materias/2023/01/01/congresso-empossa-lula-e-alckmin-na-presidencia-da-republica"
     },
     {
       "id": "lula-4",
@@ -17,7 +19,9 @@
       "numero": 4,
       "inicio": "2027-01-05",
       "fim": null,
-      "status": "futuro"
+      "status": "futuro",
+      "fonte": "Tribunal Superior Eleitoral (TSE): o presidente e o vice-presidente eleitos tomam posse em 5 de janeiro de 2027",
+      "url_fonte": "https://www.tse.jus.br/comunicacao/noticias/2026/Outubro/da-eleicao-a-diplomacao-entenda-as-etapas-ate-a-posse-dos-eleitos-238683"
     }
   ]
 }

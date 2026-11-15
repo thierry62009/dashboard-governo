@@ -74,7 +74,10 @@ Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arqui
 - [ ] Fase 5: o resumo tem uma aba por área de indicadores. "Relações exteriores" saiu por não ter indicador; reintroduza só com critério e fonte.
 
 ## Decisões da auditoria que dependem do usuário
-- [ ] **4º mandato sem fonte na página.** O botão "Lula · 4º mandato · Em breve" e a data 05/01/2027 em `data/mandatos.json` não mostram fonte. Indique a fonte oficial (ex.: resultado do TSE) para eu acrescentar, ou peça para esconder o botão até a posse.
+- [x] ~~4º mandato sem fonte na página (item M7)~~ — resolvido em 14/11/2026: `data/mandatos.json` tem `fonte` e `url_fonte` nos dois mandatos, a página mostra a fonte do 4º mandato abaixo dos botões e o verificador exige os dois campos (link https) em mandatos em andamento ou futuros.
+- [ ] **Abra os dois links de fonte dos mandatos e confira** (não consegui abrir o site do TSE: ele devolve erro 403 para robôs; usei o texto e o link que você passou):
+  - 4º mandato, TSE: https://www.tse.jus.br/comunicacao/noticias/2026/Outubro/da-eleicao-a-diplomacao-entenda-as-etapas-ate-a-posse-dos-eleitos-238683 (o calendário também cita a data: https://www.tse.jus.br/comunicacao/noticias/2026/Marco/eleicoes-2026-confira-as-principais-datas-do-calendario-eleitoral)
+  - 3º mandato, Agência Senado (escolhida por mim, porque o verificador passou a exigir fonte também no mandato em andamento; abri a página e ela é de 01/01/2023, "Congresso empossa Lula e Alckmin na Presidência da República"): https://www12.senado.leg.br/noticias/materias/2023/01/01/congresso-empossa-lula-e-alckmin-na-presidencia-da-republica — troque se preferir outra fonte.
 - [ ] **Título da abertura** ("Indicadores do governo federal, direto das fontes oficiais"): o emprego formal vem via Ipeadata. Mantenha ou troque o texto.
 - [ ] **Licença do código** (README diz "a definir") e um `SECURITY.md` curto.
 - [ ] **`CLAUDE.md` e `STATUS.md` são públicos no repositório** (não no site): a seção "Sobre o usuário" diz que o autor é iniciante. Manter ou tirar.
@@ -83,6 +86,9 @@ Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arqui
 - [ ] O Dependabot vai abrir pull requests quando uma Action tiver versão nova: basta conferir e aceitar (merge).
 
 ## Decisões registradas pelo Claude Code
+- 14/11 — Fonte dos mandatos: campos `fonte` (texto) e `url_fonte` (link), como nas séries. A página mostra a fonte só dos mandatos futuros (abaixo dos botões); a do mandato em andamento fica na dica do botão. O verificador confere só o formato do link (https), porque o TSE recusa acessos automáticos.
+- 14/11 — Redirecionamento recusado e resposta grande demais são falhas definitivas (`FalhaDefinitiva`): 1 pedido só, sem novas tentativas; no verificador, não marcam o servidor como fora.
+- 14/11 — Avisos do verificador: são 7 no computador (IPCA sem ficha + 6 nomes mais detalhados) e 10 no GitHub (IPCA + 9 tabelas do IBGE com metadados não conferidos, porque o serviço de metadados não responde lá). Nenhum é sobre valores.
 (Uma linha por decisão, com o motivo.)
 - 14/11 — Mês de transição entre mandatos: o mês conta para quem estava em exercício no dia 15 (dados são mensais; evita o mesmo mês em dois mandatos).
 - 14/11 — `mandatos.json` ganhou o campo extra `nome_curto` (texto do botão) e `_como_editar` (instruções); o 3º mandato fica com `fim: null` enquanto está em andamento.
