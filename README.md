@@ -1,6 +1,7 @@
-# dashboard-governo
+# Painel (não oficial) do Governo Federal
 
-Dashboard autoatualizável do governo federal: indicadores oficiais desde 01/01/2023.
+Projeto pessoal e não oficial, sem vínculo com o governo: painel autoatualizável com indicadores
+do governo federal desde 01/01/2023, a partir de fontes oficiais.
 
 ## Como funciona
 1. `scripts/coletar.py` baixa os indicadores das APIs oficiais (Banco Central, IBGE e Ipeadata)
@@ -37,4 +38,12 @@ Cada número da página mostra a série ou tabela, a data de extração, o link 
 - **Séries do Ipeadata:** os arquivos trazem a fonte citada. A página
   [Direitos de Uso do Ipeadata](http://www.ipeadata.gov.br/iframe_direitouso.aspx) diz que o
   conteúdo é informação pública que pode ser distribuída e copiada, com citação da fonte Ipeadata.
-- **Código do projeto** (`scripts/`, `assets/`, `index.html`, `.github/`): licença a definir.
+- **Código do projeto** (`scripts/`, `assets/estilo.css`, `assets/painel.js`, `assets/grafico.js`,
+  `index.html`, `.github/`): licença [MIT](LICENSE).
+- **Dados:** seguem as licenças e os textos de citação de cada fonte (BCB: ODbL; IBGE e Ipeadata:
+  conforme descrito acima).
+- **Fontes tipográficas** Archivo e Manrope, em `assets/fontes/`: licença OFL (SIL Open Font
+  License), com os textos de licença ao lado dos arquivos.
+
+## Segurança
+Para relatar uma falha de segurança, veja o [SECURITY.md](SECURITY.md).

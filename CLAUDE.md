@@ -1,4 +1,4 @@
-# CLAUDE.md — Painel do Governo Federal
+# CLAUDE.md — Painel (não oficial) do Governo Federal
 
 > Início de cada sessão: leia também o `STATUS.md` (o que está pronto, o que falta, o que o usuário precisa conferir). Fim de cada sessão: atualize o `STATUS.md`.
 
@@ -10,15 +10,15 @@ O site traz:
 - notícias (só título, veículo, data e link);
 - resumo do período, só com fatos e com fonte em cada afirmação.
 
-Python coleta os dados; HTML/CSS/JS simples mostra a página. Hospedado no GitHub Pages e atualizado todo dia pelo GitHub Actions.
+O nome do site é "Painel (não oficial) do Governo Federal". Python coleta os dados; HTML/CSS/JS simples mostra a página. Hospedado no GitHub Pages e atualizado todo dia pelo GitHub Actions.
 Site: https://thierry62009.github.io/dashboard-governo/
 
-## Sobre o usuário
-Iniciante em programação (~3h por semana). **Prioridade: receber o trabalho pronto, com o mínimo de interferência dele.** Ele ainda quer aprender, então:
-- comente o código em português;
+## Sobre o projeto
+Projeto de aprendizado.
+- Comente o código em português;
 - ao fim de cada fase, escreva "Como isso funciona" em poucas linhas, em português simples;
 - não use frameworks pesados;
-- não peça aprovação de planos nem explique longamente antes de implementar.
+- priorize entregar pronto com o mínimo de interferência do mantenedor.
 
 ## Regras de trabalho (obrigatórias)
 1. **Teste de verdade** e mostre a evidência: a resposta real das APIs, falhas provocadas de propósito e a página aberta num navegador.

@@ -1,4 +1,4 @@
-# STATUS — Painel do Governo Federal
+# STATUS — Painel (não oficial) do Governo Federal
 
 > Atualize este arquivo ao fim de cada sessão. As regras ficam no `CLAUDE.md`.
 
@@ -18,7 +18,7 @@
 - **Próximo passo:** Fase 4 (notícias). Antes, o usuário revisa a lista "A conferir" abaixo.
 - **Cuidados de texto e de risco (14/11/2026).** Título, abertura e rodapé dizem "não oficial"; "atualizados todos os dias" virou "verificados todos os dias (cada série muda no ritmo da fonte)"; as abas do resumo agora seguem as seis áreas dos indicadores (saiu "Relações exteriores"); o rodapé ganhou aviso e link para as Issues; nova regra 12 no `CLAUDE.md`. Commit e push em 14/11/2026, depois de testar em 360, 768 e 1440 px (sem rolagem lateral).
 
-- **Textos de licença e observações (14/11/2026).** IBGE sem afirmar licença (texto de citação, sem link); Ipeadata com o texto conferido na página de direitos de uso; BCB continua ODbL. README ganhou a seção "Licença dos dados" (código do projeto: licença a definir). PIB e desocupação explicam que os primeiros pontos incluem períodos de 2022. Selic e dólar mostram "mês em andamento, até dd/mm" no destaque, na nota do gráfico, na dica da coluna e na tabela (comparando o mês do último ponto com o mês de `extraido_em`, ambos do JSON). Verificador aceita `url_licenca` vazio. Testado em 360 e 1440 px.
+- **Textos de licença e observações (14/11/2026).** IBGE sem afirmar licença (texto de citação, sem link); Ipeadata com o texto conferido na página de direitos de uso; BCB continua ODbL. README ganhou a seção "Licença dos dados" (código do projeto: licença MIT, definida depois). PIB e desocupação explicam que os primeiros pontos incluem períodos de 2022. Selic e dólar mostram "mês em andamento, até dd/mm" no destaque, na nota do gráfico, na dica da coluna e na tabela (comparando o mês do último ponto com o mês de `extraido_em`, ambos do JSON). Verificador aceita `url_licenca` vazio. Testado em 360 e 1440 px.
 
 - **Auditoria de segurança e correções (14/11/2026).** Feito: Actions fixadas por hash de commit e Dependabot semanal para elas; permissões por job e limite de tempo no `atualizar.yml` (gatilhos e cron intocados); coletor e verificador com limite de 20 MB por resposta (também no gzip), recusa de redirecionamento fora de https, formato de data conferido (`aaaa-mm`), textos de erro limpos antes de ir para o log; verificador só abre `url_fonte` das três fontes oficiais; página com CSP, fontes hospedadas em `assets/fontes/` (sem Google Fonts), links só http(s) com `rel="noopener noreferrer"`; abertura diz "coletados todos os dias" (antes "verificados"). No GitHub (feito pelo usuário): regra `proteger-main`, secret scanning, push protection, Dependabot, relato privado de vulnerabilidade, só Actions do GitHub, e-mail privado. Tudo testado com falhas provocadas, página em 360 e 1440 px e verificador com 0 erros.
 
@@ -78,9 +78,10 @@ Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arqui
 - [ ] **Abra os dois links de fonte dos mandatos e confira** (não consegui abrir o site do TSE: ele devolve erro 403 para robôs; usei o texto e o link que você passou):
   - 4º mandato, TSE: https://www.tse.jus.br/comunicacao/noticias/2026/Outubro/da-eleicao-a-diplomacao-entenda-as-etapas-ate-a-posse-dos-eleitos-238683 (o calendário também cita a data: https://www.tse.jus.br/comunicacao/noticias/2026/Marco/eleicoes-2026-confira-as-principais-datas-do-calendario-eleitoral)
   - 3º mandato, Agência Senado (escolhida por mim, porque o verificador passou a exigir fonte também no mandato em andamento; abri a página e ela é de 01/01/2023, "Congresso empossa Lula e Alckmin na Presidência da República"): https://www12.senado.leg.br/noticias/materias/2023/01/01/congresso-empossa-lula-e-alckmin-na-presidencia-da-republica — troque se preferir outra fonte.
-- [ ] **Título da abertura** ("Indicadores do governo federal, direto das fontes oficiais"): o emprego formal vem via Ipeadata. Mantenha ou troque o texto.
-- [ ] **Licença do código** (README diz "a definir") e um `SECURITY.md` curto.
-- [ ] **`CLAUDE.md` e `STATUS.md` são públicos no repositório** (não no site): a seção "Sobre o usuário" diz que o autor é iniciante. Manter ou tirar.
+- [x] ~~Título da abertura~~ — resolvido em 14/11/2026: agora é "Indicadores do governo federal, a partir de fontes oficiais".
+- [x] ~~Nome do site~~ — resolvido em 14/11/2026: passou a ser "Painel (não oficial) do Governo Federal" (título da aba, cabeçalho, README, `CLAUDE.md` e `STATUS.md`). Os avisos de "não oficial" da abertura e do rodapé foram mantidos.
+- [x] ~~Licença do código e `SECURITY.md`~~ — resolvido em 14/11/2026: código sob licença MIT (`LICENSE`, "Copyright (c) 2026 thierry62009"); `SECURITY.md` aponta para o relato privado do GitHub, que está ativado.
+- [x] ~~Seção "Sobre o usuário" do `CLAUDE.md`~~ — resolvido em 14/11/2026: virou "Sobre o projeto", sem informações pessoais. `STATUS.md` e README revisados.
 - [ ] **E-mail nos 18 commits antigos:** só sai reescrevendo o histórico (force push, proibido pela regra 8). Os commits novos já usam o endereço anônimo do GitHub.
 - [ ] No GitHub, em Settings → Actions → General, marque "Require actions to be pinned to a full-length commit SHA" (agora os workflows já usam hash).
 - [ ] O Dependabot vai abrir pull requests quando uma Action tiver versão nova: basta conferir e aceitar (merge).
