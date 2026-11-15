@@ -31,7 +31,6 @@ Usa só a biblioteca padrão do Python.
 
 import argparse
 import calendar
-import gzip
 import importlib.util
 import json
 import math
@@ -43,6 +42,7 @@ import time
 import unicodedata
 import urllib.parse
 import urllib.request
+import zlib
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
@@ -113,6 +113,44 @@ class ErroDeRede(Exception):
 SERVIDORES_FORA = set()
 
 
+TAMANHO_MAXIMO = 20 * 1024 * 1024   # 20 MB: a maior resposta real tem menos de 1 MB
+
+
+class _SoHttps(urllib.request.HTTPRedirectHandler):
+    """Recusa redirecionamentos para endereços que não sejam https."""
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if not newurl.lower().startswith("https://"):
+            raise ValueError(f"Redirecionamento recusado (não é https): {newurl[:200]}")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+ABRIDOR = urllib.request.build_opener(_SoHttps)
+
+
+def ler_com_limite(resposta):
+    """Lê a resposta até TAMANHO_MAXIMO e descompacta (gzip) também com limite."""
+    bruto = resposta.read(TAMANHO_MAXIMO + 1)
+    if len(bruto) > TAMANHO_MAXIMO:
+        raise ValueError("Resposta grande demais (mais de 20 MB): recusada.")
+    if bruto[:2] == b"\x1f\x8b":            # resposta compactada (o IBGE faz isso mesmo sem pedir)
+        # max_length impede uma "bomba" de gzip: um arquivo pequeno que vira gigante
+        bruto = zlib.decompressobj(wbits=31).decompress(bruto, TAMANHO_MAXIMO + 1)
+        if len(bruto) > TAMANHO_MAXIMO:
+            raise ValueError("Resposta compactada grande demais (mais de 20 MB): recusada.")
+    return bruto
+
+
+def texto_seguro(texto, limite=300):
+    """Tira quebras de linha e "::" de um texto de fora antes de imprimir.
+    (No GitHub Actions, uma linha começando com "::" é lida como comando.)"""
+    limpo = " ".join(str(texto).split()).replace("::", ": :")
+    return limpo[:limite] + ("…" if len(limpo) > limite else "")
+
+
+# Só estes servidores podem ser abertos a partir de um endereço lido de data/*.json
+SERVIDORES_DAS_FONTES = {"api.bcb.gov.br", "apisidra.ibge.gov.br", "www.ipeadata.gov.br"}
+
+
 def baixar(url, como_json=True):
     """Baixa um endereço com timeout e até NOVAS_TENTATIVAS novas tentativas."""
     servidor = urllib.parse.urlsplit(url).netloc
@@ -122,10 +160,8 @@ def baixar(url, como_json=True):
     espera = ESPERA
     for tentativa in range(NOVAS_TENTATIVAS + 1):
         try:
-            with urllib.request.urlopen(pedido, timeout=TIMEOUT) as r:
-                bruto = r.read()
-            if bruto[:2] == b"\x1f\x8b":          # resposta compactada (IBGE faz isso)
-                bruto = gzip.decompress(bruto)
+            with ABRIDOR.open(pedido, timeout=TIMEOUT) as r:
+                bruto = ler_com_limite(r)
             return json.loads(bruto.decode("utf-8-sig")) if como_json else bruto
         except urllib.error.HTTPError as e:
             if 400 <= e.code < 500:               # pedido errado: repetir não adianta
@@ -137,7 +173,7 @@ def baixar(url, como_json=True):
             time.sleep(espera)
             espera *= 2
     SERVIDORES_FORA.add(servidor)
-    raise ErroDeRede(f"{type(ultimo).__name__}: {ultimo} (depois de {NOVAS_TENTATIVAS + 1} tentativas)")
+    raise ErroDeRede(f"{type(ultimo).__name__}: {texto_seguro(ultimo)} (depois de {NOVAS_TENTATIVAS + 1} tentativas)")
 
 
 # ---------------------------------------------------------------------------
@@ -411,6 +447,10 @@ def checar_link(json_, r):
     url = (json_.get("serie") or {}).get("url_fonte")
     if not url:
         return
+    partes = urllib.parse.urlsplit(str(url))
+    if partes.scheme != "https" or partes.netloc not in SERVIDORES_DAS_FONTES:
+        r.erros.append(f"url_fonte não aponta para uma das fontes oficiais (https): {texto_seguro(url)}")
+        return
     try:
         baixar(url, como_json=False)
         r.ok.append("Link url_fonte responde.")
@@ -483,6 +523,10 @@ def texto(resultados):
     return "\n".join(linhas)
 
 
+def para_markdown(x):
+    return texto_seguro(x, 1000).replace("<", "&lt;")
+
+
 def markdown(resultados, hoje):
     e = sum(len(r.erros) for r in resultados)
     a = sum(len(r.avisos) for r in resultados)
@@ -495,7 +539,8 @@ def markdown(resultados, hoje):
     for r in resultados:
         if r.erros or r.avisos:
             md += ["", f"## {r.titulo}"]
-            md += [f"- ❌ {x}" for x in r.erros] + [f"- ⚠️ {x}" for x in r.avisos]
+            # Os textos podem citar nomes vindos das APIs: vão sem quebras de linha nem "<"
+            md += [f"- ❌ {para_markdown(x)}" for x in r.erros] + [f"- ⚠️ {para_markdown(x)}" for x in r.avisos]
     return "\n".join(md) + "\n"
 
 

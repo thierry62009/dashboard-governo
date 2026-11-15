@@ -84,6 +84,10 @@ Iniciante em programação (~3h por semana). **Prioridade: receber o trabalho pr
 ## Decisões já tomadas
 - **Hospedagem:** GitHub Pages no modo "GitHub Actions" (não "deploy from branch"). O site publicado contém só `index.html`, `assets/` e `data/`; `scripts/` e `.github/` não ficam públicos.
 - **Verificador:** `scripts/verificar.py` lê a lista de `scripts/coletar.py` (fonte única dos códigos) e confere metadados oficiais, 3 valores por série (por um endereço diferente do da coleta), atualização, esquema dos JSON, consistência com `painel.js` e `mandatos.json`. Só aponta: nunca corrige nem grava em `data/` ou `assets/`. Sai com código 1 se houver erro. Roda toda segunda às 12:00 de Brasília por `.github/workflows/verificar.yml` (só leitura, sem commit) e pelo botão manual.
+- **Segurança:**
+  - Actions sempre fixadas pelo hash completo do commit (versão em comentário); o Dependabot (`.github/dependabot.yml`) propõe as atualizações. Permissões declaradas por job, com `permissions: {}` no topo.
+  - Respostas das APIs são dados de fora: limite de 20 MB (também ao descompactar), sem redirecionamento para fora de https, datas só no formato `aaaa-mm`, e texto de erro passa por `texto_seguro` antes de ser impresso.
+  - A página tem CSP em `<meta>` (só carrega arquivos do próprio site): nada de script ou estilo escrito dentro do HTML, nada de CDN. Texto vindo do JSON entra sempre por `textContent`; links passam pela função `link` (só http/https).
 - **Rotina:** `.github/workflows/atualizar.yml`.
   - Gatilhos: cron `0 12 * * *` (09:00 de Brasília), botão manual e push em `main`.
   - Passos: roda o script, faz commit do JSON (mantém o agendamento ativo), monta `_site` e publica.
@@ -122,7 +126,7 @@ Iniciante em programação (~3h por semana). **Prioridade: receber o trabalho pr
     | Links | #FDBA74 |
     | Contorno do botão inativo | #6B7180 (3,8:1) |
 
-  - Fontes: Archivo 600–800 (títulos, números e botões; peso 800 em títulos e números) e Manrope 400–700 (texto), pelo Google Fonts.
+  - Fontes: Archivo 600–800 (títulos, números e botões; peso 800 em títulos e números) e Manrope 400–700 (texto), hospedadas no próprio site (`assets/fontes/`, licença OFL), sem Google Fonts.
   - Botão ativo: fundo laranja com **texto escuro**. Texto claro sobre o laranja dá só 2,45:1 e reprova.
 - **Estrutura da página:**
   1. cabeçalho com âncoras;

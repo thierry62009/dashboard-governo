@@ -135,9 +135,13 @@ function criar(tag, classe, texto) {
   return el;
 }
 
+// Cria um link. Só aceita endereços http(s): se o JSON trouxer outra coisa
+// (ex.: "javascript:..."), devolve só o texto, sem link.
 function link(texto, url) {
+  if (!/^https?:\/\//i.test(String(url))) return document.createTextNode(texto);
   const a = criar("a", "", texto);
   a.href = url;
+  a.rel = "noopener noreferrer";
   return a;
 }
 

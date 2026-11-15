@@ -1,0 +1,8 @@
+# Dependabot: toda semana confere se as Actions usadas nos workflows têm versão nova
+# e abre um pull request atualizando o hash (as Actions são fixadas por hash de commit).
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

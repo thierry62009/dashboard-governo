@@ -20,6 +20,8 @@
 
 - **Textos de licença e observações (14/11/2026).** IBGE sem afirmar licença (texto de citação, sem link); Ipeadata com o texto conferido na página de direitos de uso; BCB continua ODbL. README ganhou a seção "Licença dos dados" (código do projeto: licença a definir). PIB e desocupação explicam que os primeiros pontos incluem períodos de 2022. Selic e dólar mostram "mês em andamento, até dd/mm" no destaque, na nota do gráfico, na dica da coluna e na tabela (comparando o mês do último ponto com o mês de `extraido_em`, ambos do JSON). Verificador aceita `url_licenca` vazio. Testado em 360 e 1440 px.
 
+- **Auditoria de segurança e correções (14/11/2026).** Feito: Actions fixadas por hash de commit e Dependabot semanal para elas; permissões por job e limite de tempo no `atualizar.yml` (gatilhos e cron intocados); coletor e verificador com limite de 20 MB por resposta (também no gzip), recusa de redirecionamento fora de https, formato de data conferido (`aaaa-mm`), textos de erro limpos antes de ir para o log; verificador só abre `url_fonte` das três fontes oficiais; página com CSP, fontes hospedadas em `assets/fontes/` (sem Google Fonts), links só http(s) com `rel="noopener noreferrer"`; abertura diz "coletados todos os dias" (antes "verificados"). No GitHub (feito pelo usuário): regra `proteger-main`, secret scanning, push protection, Dependabot, relato privado de vulnerabilidade, só Actions do GitHub, e-mail privado. Tudo testado com falhas provocadas, página em 360 e 1440 px e verificador com 0 erros.
+
 ## Roteiro de fases
 Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arquivo atualizado.
 
@@ -70,6 +72,15 @@ Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arqui
 - [ ] **Habilitar as Issues do repositório** (GitHub > Settings > General > Features > Issues), porque o rodapé manda o leitor para lá. Se preferir outro canal de contato, troque o link em `index.html` (e não coloque e-mail pessoal sem querer).
 - [ ] Reler o aviso do rodapé ("projeto pessoal e não oficial...") e decidir se quer uma orientação jurídica específica (advogado ou núcleo de prática jurídica de faculdade de Direito).
 - [ ] Fase 5: o resumo tem uma aba por área de indicadores. "Relações exteriores" saiu por não ter indicador; reintroduza só com critério e fonte.
+
+## Decisões da auditoria que dependem do usuário
+- [ ] **4º mandato sem fonte na página.** O botão "Lula · 4º mandato · Em breve" e a data 05/01/2027 em `data/mandatos.json` não mostram fonte. Indique a fonte oficial (ex.: resultado do TSE) para eu acrescentar, ou peça para esconder o botão até a posse.
+- [ ] **Título da abertura** ("Indicadores do governo federal, direto das fontes oficiais"): o emprego formal vem via Ipeadata. Mantenha ou troque o texto.
+- [ ] **Licença do código** (README diz "a definir") e um `SECURITY.md` curto.
+- [ ] **`CLAUDE.md` e `STATUS.md` são públicos no repositório** (não no site): a seção "Sobre o usuário" diz que o autor é iniciante. Manter ou tirar.
+- [ ] **E-mail nos 18 commits antigos:** só sai reescrevendo o histórico (force push, proibido pela regra 8). Os commits novos já usam o endereço anônimo do GitHub.
+- [ ] No GitHub, em Settings → Actions → General, marque "Require actions to be pinned to a full-length commit SHA" (agora os workflows já usam hash).
+- [ ] O Dependabot vai abrir pull requests quando uma Action tiver versão nova: basta conferir e aceitar (merge).
 
 ## Decisões registradas pelo Claude Code
 (Uma linha por decisão, com o motivo.)

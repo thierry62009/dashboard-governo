@@ -16,13 +16,14 @@ Se um indicador falhar, o arquivo antigo dele continua como estava e os
 outros seguem normalmente. O script só termina com erro se TODOS falharem.
 """
 
-import gzip
 import json
 import math
 import os
+import re
 import sys
 import time
 import urllib.request
+import zlib
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -239,6 +240,43 @@ INDICADORES = [
 
 
 # ---------------------------------------------------------------------------
+# Proteções de rede (as respostas das APIs são dados de fora: não confiamos nelas)
+# ---------------------------------------------------------------------------
+TAMANHO_MAXIMO = 20 * 1024 * 1024   # 20 MB: a maior resposta real tem menos de 1 MB
+
+
+class _SoHttps(urllib.request.HTTPRedirectHandler):
+    """Recusa redirecionamentos para endereços que não sejam https."""
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if not newurl.lower().startswith("https://"):
+            raise ValueError(f"Redirecionamento recusado (não é https): {newurl[:200]}")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+ABRIDOR = urllib.request.build_opener(_SoHttps)
+
+
+def ler_com_limite(resposta):
+    """Lê a resposta até TAMANHO_MAXIMO e descompacta (gzip) também com limite."""
+    bruto = resposta.read(TAMANHO_MAXIMO + 1)
+    if len(bruto) > TAMANHO_MAXIMO:
+        raise ValueError("Resposta grande demais (mais de 20 MB): recusada.")
+    if bruto[:2] == b"\x1f\x8b":            # resposta compactada (o IBGE faz isso mesmo sem pedir)
+        # max_length impede uma "bomba" de gzip: um arquivo pequeno que vira gigante
+        bruto = zlib.decompressobj(wbits=31).decompress(bruto, TAMANHO_MAXIMO + 1)
+        if len(bruto) > TAMANHO_MAXIMO:
+            raise ValueError("Resposta compactada grande demais (mais de 20 MB): recusada.")
+    return bruto
+
+
+def texto_seguro(texto, limite=300):
+    """Tira quebras de linha e "::" de um texto de fora antes de imprimir.
+    (No GitHub Actions, uma linha começando com "::" é lida como comando.)"""
+    limpo = " ".join(str(texto).split()).replace("::", ": :")
+    return limpo[:limite] + ("…" if len(limpo) > limite else "")
+
+
+# ---------------------------------------------------------------------------
 # Funções de apoio
 # ---------------------------------------------------------------------------
 def baixar_json(url):
@@ -251,11 +289,8 @@ def baixar_json(url):
     for tentativa in range(1, TENTATIVAS + 1):
         try:
             # timeout=60: se a API não responder em 60 segundos, desiste com erro.
-            with urllib.request.urlopen(pedido, timeout=60) as resposta:
-                bruto = resposta.read()
-            # Algumas APIs do governo respondem compactadas (gzip) mesmo sem pedir.
-            if bruto[:2] == b"\x1f\x8b":
-                bruto = gzip.decompress(bruto)
+            with ABRIDOR.open(pedido, timeout=60) as resposta:
+                bruto = ler_com_limite(resposta)
             # "utf-8-sig" ignora a marca invisível que o Ipeadata põe no início.
             return json.loads(bruto.decode("utf-8-sig"))
         except Exception as erro:
@@ -263,7 +298,7 @@ def baixar_json(url):
             definitivo = getattr(erro, "code", 0) in range(400, 500)
             if definitivo or tentativa == TENTATIVAS:
                 raise
-            print(f"  Tentativa {tentativa} falhou ({erro}); esperando {espera}s...")
+            print(f"  Tentativa {tentativa} falhou ({texto_seguro(erro)}); esperando {espera}s...")
             time.sleep(espera)
             espera *= 2
 
@@ -342,7 +377,11 @@ def coletar_ipea(ind, agora):
 COLETORES = {"sgs": coletar_sgs, "sidra": coletar_sidra, "ipea": coletar_ipea}
 
 
-def validar(dados, agora):
+FORMATO_MES = re.compile(r"\d{4}-(0[1-9]|1[0-2])")
+FORMATO_DIA = re.compile(r"\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])")
+
+
+def validar(dados, agora, anual=False):
     """Para com erro se os dados parecerem errados."""
     if not dados:
         raise ValueError("Nenhum dado a partir de " + MES_INICIAL + " (lista vazia).")
@@ -352,7 +391,15 @@ def validar(dados, agora):
         raise ValueError("As datas não estão em ordem.")
     if len(datas) != len(set(datas)):
         raise ValueError("Há períodos repetidos.")
-    if datas[-1][:4] > agora.strftime("%Y"):
+    # Formato exato: "aaaa-mm" (e "aaaa-mm-dd" no campo "dia"). Qualquer outro
+    # texto vindo da API é recusado antes de chegar ao arquivo.
+    for d in dados:
+        if not FORMATO_MES.fullmatch(d["data"]):
+            raise ValueError(f"Data fora do formato aaaa-mm: {d['data']!r}")
+        if "dia" in d and not (FORMATO_DIA.fullmatch(d["dia"]) and d["dia"].startswith(d["data"])):
+            raise ValueError(f"Dia fora do formato aaaa-mm-dd: {d['dia']!r}")
+    # Séries anuais são guardadas como "aaaa-12": para elas vale só o ano.
+    if datas[-1] > agora.strftime("%Y-%m") and not (anual and datas[-1][:4] <= agora.strftime("%Y")):
         raise ValueError(f"Há dado com data no futuro: {datas[-1]}")
     if any(not math.isfinite(d["valor"]) for d in dados):
         raise ValueError("Há valor que não é um número válido.")
@@ -392,7 +439,7 @@ def coletar_um(ind):
     dados, url, identificacao = COLETORES[ind["tipo"]](ind, agora)
     # Fica só com o que é de MES_INICIAL em diante, em ordem de data
     dados = sorted((d for d in dados if d["data"] >= MES_INICIAL), key=lambda d: d["data"])
-    validar(dados, agora)
+    validar(dados, agora, anual=ind["periodicidade"] == "anual")
     arquivo = salvar(ind, dados, url, identificacao, agora.isoformat(timespec="seconds"))
     print(f"  OK: {len(dados)} períodos em {arquivo} | primeiro {dados[0]} | último {dados[-1]}")
 
@@ -412,10 +459,11 @@ def main():
             coletar_um(ind)
         except Exception as erro:
             falhas.append(ind["id"])
-            print(f"  FALHOU: {type(erro).__name__}: {erro} (o arquivo antigo, se existir, foi mantido)")
+            motivo = texto_seguro(erro)   # o texto do erro pode conter dados da API
+            print(f"  FALHOU: {type(erro).__name__}: {motivo} (o arquivo antigo, se existir, foi mantido)")
             # No GitHub Actions, esta linha vira um aviso amarelo na página da execução
             if os.environ.get("GITHUB_ACTIONS"):
-                print(f"::warning title=Indicador não atualizado::{ind['id']}: {erro}")
+                print(f"::warning title=Indicador não atualizado::{ind['id']}: {motivo}")
 
     print(f"\nResumo: {len(escolhidos) - len(falhas)} de {len(escolhidos)} indicadores atualizados.")
     if falhas:

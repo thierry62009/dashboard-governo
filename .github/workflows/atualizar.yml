@@ -9,11 +9,8 @@ on:
   push:
     branches: [main]   # publica também quando você muda o código
 
-# Permissões que a rotina precisa:
-permissions:
-  contents: write   # fazer commit do JSON atualizado
-  pages: write      # publicar no GitHub Pages
-  id-token: write   # exigido pela Action oficial de publicação
+# Nenhuma permissão por padrão: cada job abaixo declara só o que precisa.
+permissions: {}
 
 # Evita duas execuções ao mesmo tempo brigando pelo mesmo commit.
 concurrency:
@@ -23,12 +20,15 @@ concurrency:
 jobs:
   atualizar:
     runs-on: ubuntu-latest
+    timeout-minutes: 30   # evita uma execução presa (o padrão seria 6 horas)
+    permissions:
+      contents: write   # fazer commit do JSON atualizado
     steps:
       - name: Baixar o código do repositório
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1   # v7.0.1
 
       - name: Instalar Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0   # v7.1.0
         with:
           python-version: "3.12"
 
@@ -62,17 +62,21 @@ jobs:
           cp -r assets data _site/
 
       - name: Enviar a pasta do site
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9   # v5.0.0
         with:
           path: _site
 
   publicar:
     needs: atualizar          # só roda se o job anterior deu certo
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write      # publicar no GitHub Pages
+      id-token: write   # exigido pela Action oficial de publicação
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - name: Publicar no GitHub Pages
         id: deploy
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346   # v5.0.1

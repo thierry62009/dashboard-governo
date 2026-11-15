@@ -5,7 +5,8 @@ Dashboard autoatualizável do governo federal: indicadores oficiais desde 01/01/
 ## Como funciona
 1. `scripts/coletar.py` baixa os indicadores das APIs oficiais (Banco Central, IBGE e Ipeadata)
    e grava um arquivo por indicador em `data/`.
-2. `index.html` é a página. O visual está em `assets/estilo.css`; `assets/painel.js`
+2. `index.html` é a página. O visual está em `assets/estilo.css` (as fontes Archivo e Manrope
+   ficam em `assets/fontes/`, com licença SIL Open Font License); `assets/painel.js`
    lê os JSON de `data/` e monta os cartões; `assets/grafico.js` desenha os gráficos
    em SVG, sem bibliotecas. `data/mandatos.json` (editado à mão) define os mandatos.
 3. `.github/workflows/atualizar.yml` roda o script todo dia às 09:00 (Brasília),

@@ -7,11 +7,13 @@
   <meta name="description" content="Projeto pessoal e não oficial: indicadores oficiais do Brasil desde 2023 (economia, trabalho, contas públicas, saúde, educação e segurança), com fonte e data de extração.">
   <meta name="color-scheme" content="dark">
 
-  <!-- Fontes do Google Fonts: Archivo (títulos e números) e Manrope (texto) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600..800&family=Manrope:wght@400..700&display=swap">
+  <!-- Política de segurança (CSP): o navegador só carrega scripts, estilos, fontes e
+       dados deste próprio site. Nada de fora e nada de script escrito dentro do HTML. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <!-- Não envia o endereço desta página aos sites dos links -->
+  <meta name="referrer" content="no-referrer">
 
+  <!-- As fontes (Archivo e Manrope) ficam em assets/fontes e são declaradas no estilo.css -->
   <link rel="stylesheet" href="assets/estilo.css">
 </head>
 <body>
@@ -42,7 +44,7 @@
         <p class="etiqueta">Mandato 2023 a 2026 · Dados oficiais · Projeto não oficial</p>
         <h1>Indicadores do governo federal, direto das fontes oficiais</h1>
         <p class="apoio">Dados do Banco Central, do IBGE e do Ipeadata desde 1º de janeiro de 2023,
-          verificados todos os dias (cada série muda no ritmo da fonte: diária, mensal, trimestral ou anual), com série, data de extração e link em cada número.</p>
+          coletados todos os dias (cada série muda no ritmo da fonte: diária, mensal, trimestral ou anual), com série, data de extração e link em cada número.</p>
         <!-- "Atualizado em" vem do campo extraido_em do JSON (preenchido pelo JS) -->
         <p class="selo" id="selo-atualizado" hidden>
           <span class="ponto" aria-hidden="true"></span>
@@ -127,7 +129,7 @@
       <h2>Fontes e licença</h2>
       <ul class="lista-fontes" id="lista-fontes"></ul>
       <p class="secundario">Projeto pessoal e não oficial, sem vínculo com o governo, com partidos ou com os órgãos citados. Os dados pertencem às fontes listadas acima e são apresentados sem opinião.</p>
-      <p class="secundario">Encontrou um erro? Avise pelas <a href="https://github.com/thierry62009/dashboard-governo/issues">Issues do projeto no GitHub</a>. Se o erro for confirmado na fonte, o dado é corrigido.</p>
+      <p class="secundario">Encontrou um erro? Avise pelas <a href="https://github.com/thierry62009/dashboard-governo/issues" rel="noopener noreferrer">Issues do projeto no GitHub</a>. Se o erro for confirmado na fonte, o dado é corrigido.</p>
       <p class="secundario" id="rodape-atualizado"></p>
     </div>
   </footer>
