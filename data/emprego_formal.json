@@ -8,13 +8,13 @@
     "origem": "Novo Caged (Min. Economia/SEPRT, conforme o Ipeadata)",
     "fonte": "Ipeadata (Instituto de Pesquisa Econômica Aplicada)",
     "fonte_sigla": "Ipeadata",
-    "licenca": "Uso público com citação da fonte (Ipeadata)",
+    "licenca": "Informação pública, que pode ser distribuída e copiada com citação da fonte Ipeadata",
     "url_licenca": "http://www.ipeadata.gov.br/iframe_direitouso.aspx",
     "url_fonte": "https://www.ipeadata.gov.br/api/odata4/ValoresSerie(SERCODIGO='CAGED12_SALDONAJU12')",
     "url_pagina": "https://www.ipeadata.gov.br/api/odata4/Metadados('CAGED12_SALDONAJU12')",
     "observacao": "Saldo = admissões menos demissões de empregados com carteira no mês. \"Com ajuste\" inclui as declarações entregues fora do prazo, por isso os meses recentes podem mudar."
   },
-  "extraido_em": "2026-11-14T17:21:03-03:00",
+  "extraido_em": "2026-11-14T21:27:25-03:00",
   "dados": [
     {
       "data": "2023-01",

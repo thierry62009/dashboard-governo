@@ -8,13 +8,13 @@
     "origem": "IBGE, PNAD Contínua anual",
     "fonte": "IBGE - SIDRA (Sistema IBGE de Recuperação Automática)",
     "fonte_sigla": "IBGE/SIDRA",
-    "licenca": "Uso livre com citação da fonte (IBGE)",
-    "url_licenca": "https://biblioteca.ibge.gov.br/biblioteca-servicos.html",
+    "licenca": "Dados do IBGE (SIDRA); fonte citada conforme orientação do IBGE",
+    "url_licenca": "",
     "url_fonte": "https://apisidra.ibge.gov.br/values/t/7138/n1/all/v/10276/p/all/c2/6794/c58/2792",
     "url_pagina": "https://sidra.ibge.gov.br/tabela/7138",
     "observacao": "Parcela das pessoas de 15 a 17 anos que frequentam escola."
   },
-  "extraido_em": "2026-11-14T17:21:06-03:00",
+  "extraido_em": "2026-11-14T21:28:27-03:00",
   "dados": [
     {
       "data": "2023-12",

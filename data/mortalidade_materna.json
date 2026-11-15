@@ -8,12 +8,12 @@
     "origem": "IBGE, Objetivos de Desenvolvimento Sustentável",
     "fonte": "IBGE - SIDRA (Sistema IBGE de Recuperação Automática)",
     "fonte_sigla": "IBGE/SIDRA",
-    "licenca": "Uso livre com citação da fonte (IBGE)",
-    "url_licenca": "https://biblioteca.ibge.gov.br/biblioteca-servicos.html",
+    "licenca": "Dados do IBGE (SIDRA); fonte citada conforme orientação do IBGE",
+    "url_licenca": "",
     "url_fonte": "https://apisidra.ibge.gov.br/values/t/6694/n1/all/v/9730/p/all",
     "url_pagina": "https://sidra.ibge.gov.br/tabela/6694"
   },
-  "extraido_em": "2026-11-14T17:21:05-03:00",
+  "extraido_em": "2026-11-14T21:28:27-03:00",
   "dados": [
     {
       "data": "2023-12",

@@ -8,13 +8,13 @@
     "origem": "IBGE, PNAD Contínua",
     "fonte": "IBGE - SIDRA (Sistema IBGE de Recuperação Automática)",
     "fonte_sigla": "IBGE/SIDRA",
-    "licenca": "Uso livre com citação da fonte (IBGE)",
-    "url_licenca": "https://biblioteca.ibge.gov.br/biblioteca-servicos.html",
+    "licenca": "Dados do IBGE (SIDRA); fonte citada conforme orientação do IBGE",
+    "url_licenca": "",
     "url_fonte": "https://apisidra.ibge.gov.br/values/t/6381/n1/all/v/4099/p/all",
     "url_pagina": "https://sidra.ibge.gov.br/tabela/6381",
-    "observacao": "Cada ponto se refere a um trimestre móvel: três meses seguidos, terminados no mês indicado."
+    "observacao": "Cada ponto se refere a um trimestre móvel: três meses seguidos, terminados no mês indicado. Os pontos de janeiro e fevereiro de 2023 incluem meses de 2022, porque cada ponto cobre três meses."
   },
-  "extraido_em": "2026-11-14T17:21:02-03:00",
+  "extraido_em": "2026-11-14T21:27:23-03:00",
   "dados": [
     {
       "data": "2023-01",
