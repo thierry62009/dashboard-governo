@@ -10,11 +10,11 @@
     "fonte_sigla": "BCB/SGS",
     "licenca": "ODbL (Open Database License) - exige citação da fonte",
     "url_licenca": "https://opendatacommons.org/licenses/odbl/",
-    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=01/01/2023&dataFinal=15/11/2026",
+    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=01/01/2023&dataFinal=16/11/2026",
     "url_pagina": "https://dadosabertos.bcb.gov.br/dataset/432-taxa-de-juros---meta-selic-definida-pelo-copom",
     "observacao": "Série diária: o gráfico mostra o valor do último dia disponível de cada mês."
   },
-  "extraido_em": "2026-11-15T15:44:03-03:00",
+  "extraido_em": "2026-11-16T18:54:24-03:00",
   "dados": [
     {
       "data": "2023-01",
@@ -249,7 +249,7 @@
     {
       "data": "2026-11",
       "valor": 13.75,
-      "dia": "2026-11-15"
+      "dia": "2026-11-16"
     }
   ]
 }
