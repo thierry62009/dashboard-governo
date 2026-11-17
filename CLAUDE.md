@@ -80,6 +80,7 @@ Projeto de aprendizado.
 ## Cuidados com o Ipeadata
 - Dados: `https://www.ipeadata.gov.br/api/odata4/ValoresSerie(SERCODIGO='{codigo}')`; metadados em `.../Metadados('{codigo}')` (o `$filter` com `contains` dá HTTP 400).
 - Código inexistente **não dá erro**: vem HTTP 200 com lista vazia. A resposta começa com uma marca invisível (BOM): leia como `utf-8-sig`.
+- O nome `www.ipeadata.gov.br` aponta para **dois servidores**, e um deles (177.15.137.13, visto em 17/11/2026) não responde: quem cair nele espera ~40 s ou recebe falha de conexão. Não é erro do painel; use tempo-limite e novas tentativas.
 
 ## Decisões já tomadas
 - **Hospedagem:** GitHub Pages no modo "GitHub Actions" (não "deploy from branch"). O site publicado contém só `index.html`, `assets/` e `data/`; `scripts/` e `.github/` não ficam públicos.

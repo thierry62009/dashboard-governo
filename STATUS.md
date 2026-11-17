@@ -22,6 +22,12 @@
 
 - **Auditoria de segurança e correções (14/11/2026).** Feito: Actions fixadas por hash de commit e Dependabot semanal para elas; permissões por job e limite de tempo no `atualizar.yml` (gatilhos e cron intocados); coletor e verificador com limite de 20 MB por resposta (também no gzip), recusa de redirecionamento fora de https, formato de data conferido (`aaaa-mm`), textos de erro limpos antes de ir para o log; verificador só abre `url_fonte` das três fontes oficiais; página com CSP, fontes hospedadas em `assets/fontes/` (sem Google Fonts), links só http(s) com `rel="noopener noreferrer"`; abertura diz "coletados todos os dias" (antes "verificados"). No GitHub (feito pelo usuário): regra `proteger-main`, secret scanning, push protection, Dependabot, relato privado de vulnerabilidade, só Actions do GitHub, e-mail privado. Tudo testado com falhas provocadas, página em 360 e 1440 px e verificador com 0 erros.
 
+- **Teste de todos os links de fonte (17/11/2026).** 40 links (os de `data/*.json` publicados no site, `index.html`, `painel.js` e README), abertos com pedido igual ao de navegador e, os suspeitos, no Brave sem janela. Todos os links do BCB, do SIDRA (API e páginas `/tabela/`), da licença ODbL, da Agência Senado e das Issues responderam 200. Problemas achados:
+  - **Ipeadata (emprego formal):** um dos dois servidores do Ipeadata não responde (testado três vezes: 177.15.137.13 sem resposta em 30 s; 45.171.102.13 responde em 0,2 s). Quem cai no servidor ruim vê demora ou falha de conexão. É do lado do Ipea, não do painel. Afeta os dois links do cartão e o de direitos de uso.
+  - **TSE (fonte do 4º mandato):** HTTP 403 "Access Denied" (proteção Akamai) para robôs e também para o navegador sem janela. Num navegador normal costuma abrir, mas não consegui provar.
+  - **`https://www3.bcb.gov.br/sgspub/` (página do IPCA e rodapé):** abre, mas é a tela inicial do SGS, não a ficha da série 433 (a 433 não tem ficha no catálogo de dados abertos).
+  - `https://sidra.ibge.gov.br/` (só no README): página de verificação "Um momento…" do Cloudflare para robôs.
+
 ## Roteiro de fases
 Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arquivo atualizado.
 
@@ -33,6 +39,7 @@ Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arqui
 - **Fase 6 — Comparação entre mandatos e presidentes (futura):** seletor para alternar e comparar mandatos de vários presidentes, com as mesmas métricas e a mesma janela de tempo. Exige estender a coleta para antes de 2023 (atenção ao limite de 10 anos das séries diárias do SGS). Começar só depois da Fase 3 completa.
 
 ## Pendências abertas (A conferir — só o usuário pode fazer)
+- [ ] **Qual link deu "falha na requisição" em 15/11 à noite?** O teste de 17/11 apontou o Ipeadata (um servidor fora do ar) como causa mais provável. Se foi outro, diga qual. Decida também se quer trocar a fonte do 4º mandato (TSE bloqueia robôs) e se quer que o verificador semanal passe a testar todos os links da página.
 - [ ] **Teste de 7 dias da rotina agendada (de 11/11 a 17/11/2026).** 1ª execução por `schedule`: 11/11, iniciou 19:29 UTC (atraso de ~7h30 do GitHub em relação às 12:00), sucesso. Confira em https://github.com/thierry62009/dashboard-governo/actions
 - [ ] Texto de citação exigido pelo BCB para a ODbL: https://dadosabertos.bcb.gov.br/
 - [ ] Comparar valores do gráfico com o SGS (fev/2025 = 1,31; ago/2026 = −0,32): https://www3.bcb.gov.br/sgspub/
