@@ -23,7 +23,7 @@ O que é checado:
   c) se a série está atualizada (ver ATRASO_MAXIMO_DIAS);
   d) esquema do JSON (campos, tipos, ordem dos meses, fonte, link, licença);
   e) consistência entre data/*.json, scripts/coletar.py e assets/painel.js,
-     e se os links url_fonte respondem;
+     e se todos os links que o leitor pode clicar respondem (seção "Links da página");
   f) data/mandatos.json (datas, sobreposição, status coerente com hoje).
 
 Usa só a biblioteca padrão do Python.
@@ -31,12 +31,14 @@ Usa só a biblioteca padrão do Python.
 
 import argparse
 import calendar
+import glob
 import importlib.util
 import json
 import math
 import os
 import random
 import re
+import socket
 import sys
 import time
 import unicodedata
@@ -449,22 +451,6 @@ def checar_pagina(raiz, indicadores, r):
         r.ok.append(f"Os {len(em_data)} indicadores batem entre data/, coletar.py e painel.js.")
 
 
-def checar_link(json_, r):
-    url = (json_.get("serie") or {}).get("url_fonte")
-    if not url:
-        return
-    partes = urllib.parse.urlsplit(str(url))
-    if partes.scheme != "https" or partes.netloc not in SERVIDORES_DAS_FONTES:
-        r.erros.append(f"url_fonte não aponta para uma das fontes oficiais (https): {texto_seguro(url)}")
-        return
-    try:
-        baixar(url, como_json=False)
-        r.ok.append("Link url_fonte responde.")
-    except urllib.error.HTTPError as e:
-        r.avisos.append(f"Link url_fonte respondeu HTTP {e.code}: {url}")
-    except ErroDeRede as e:
-        r.avisos.append(f"Link url_fonte não respondeu ({e}): {url}")
-
 
 # ---------------------------------------------------------------------------
 # f) Mandatos
@@ -521,6 +507,136 @@ def checar_mandatos(raiz, r, hoje):
             r.erros.append(f"Mandato {m['id']!r} está 'encerrado' sem 'fim' no passado.")
     if not r.erros:
         r.ok.append(f"{len(lista)} mandatos com datas válidas, sem sobreposição e status coerente com {hoje}.")
+
+
+# ---------------------------------------------------------------------------
+# g) Links da página
+# ---------------------------------------------------------------------------
+# Servidores que a página pode citar. Um link para outro servidor vira ERRO e não é
+# aberto: confira o link na mão e, se estiver certo, acrescente o servidor aqui.
+SERVIDORES_DOS_LINKS = {
+    "api.bcb.gov.br", "dadosabertos.bcb.gov.br", "www3.bcb.gov.br",   # Banco Central
+    "apisidra.ibge.gov.br", "sidra.ibge.gov.br",                      # IBGE
+    "www.ipeadata.gov.br",                                            # Ipea
+    "opendatacommons.org",                                            # texto da licença ODbL
+    "www12.senado.leg.br", "www.tse.jus.br",                          # fontes dos mandatos
+    "github.com",                                                     # canal de contato (Issues)
+}
+# Sites que recusam qualquer acesso automático (HTTP 403 também no navegador sem
+# janela, conferido em 17/11/2026). Para eles, um 403 não conta como link quebrado.
+BLOQUEIAM_ROBOS = {"www.tse.jus.br"}
+TIMEOUT_LINK = 20   # segundos por tentativa
+
+
+def links_da_pagina(raiz):
+    """Junta, sem repetir, os links que o leitor pode clicar e diz onde cada um aparece."""
+    links = {}
+
+    def anotar(url, onde):
+        if isinstance(url, str) and url.strip():
+            links.setdefault(url.strip(), []).append(onde)
+
+    for caminho in sorted(glob.glob(os.path.join(raiz, "data", "*.json"))):
+        nome = os.path.basename(caminho)
+        try:
+            j = json.load(open(caminho, encoding="utf-8"))
+        except (OSError, ValueError):
+            continue          # arquivo ilegível já é apontado em outra parte do relatório
+        if not isinstance(j, dict):
+            continue
+        serie = j.get("serie")
+        if isinstance(serie, dict):
+            for campo in ("url_fonte", "url_pagina", "url_licenca"):
+                anotar(serie.get(campo), f"{nome} ({campo})")
+        for m in j.get("mandatos") or []:
+            if isinstance(m, dict):
+                anotar(m.get("url_fonte"), f"{nome} ({m.get('id')})")
+    for rel in ("index.html", os.path.join("assets", "painel.js")):
+        try:
+            conteudo = open(os.path.join(raiz, rel), encoding="utf-8").read()
+        except OSError:
+            continue
+        for url in re.findall(r"https?://[^\s\"'<>`)]+", conteudo):
+            anotar(url, rel)
+    return links
+
+
+def abrir_link(url):
+    """Abre o link como um leitor faria. Devolve (código HTTP, None) ou (None, motivo da falha)."""
+    pedido = urllib.request.Request(url, headers={
+        "User-Agent": "painel-verificador/1.0 (python-urllib)",
+        "Accept": "text/html,application/json;q=0.9,*/*;q=0.8"})
+    motivo = None
+    for tentativa in range(2):                 # uma nova tentativa, para não acusar um soluço
+        try:
+            with ABRIDOR.open(pedido, timeout=TIMEOUT_LINK) as resposta:
+                resposta.read(64 * 1024)       # basta o começo: só queremos saber se abre
+                return resposta.status, None
+        except urllib.error.HTTPError as e:
+            if 400 <= e.code < 500:            # 4xx: repetir não muda nada
+                return e.code, None
+            motivo = f"HTTP {e.code}"
+        except FalhaDefinitiva as e:
+            return None, texto_seguro(e)
+        except Exception as e:                 # tempo esgotado, conexão recusada etc.
+            motivo = f"{type(e).__name__}: {texto_seguro(e, 120)}"
+        if tentativa == 0:
+            time.sleep(ESPERA)
+    return None, motivo
+
+
+def enderecos_sem_resposta(servidor, porta):
+    """Um nome pode apontar para vários servidores, e o navegador escolhe um deles.
+    Testa a conexão com cada endereço IPv4 e devolve (todos, os que não respondem)."""
+    try:
+        todos = sorted({a[4][0] for a in socket.getaddrinfo(servidor, porta, socket.AF_INET,
+                                                             socket.SOCK_STREAM)})
+    except OSError:
+        return [], []                          # sem nome na rede: o teste do link já acusa
+    fora = []
+    for ip in todos:
+        try:
+            socket.create_connection((ip, porta), timeout=10).close()
+        except OSError:
+            fora.append(ip)
+    return todos, fora
+
+
+def checar_links(raiz, r):
+    links = links_da_pagina(raiz)
+    servidores = {}   # servidor -> porta a testar (a do https, se houver)
+    bons = 0
+    for url, onde in sorted(links.items()):
+        lugares = ", ".join(onde[:3]) + (f" e mais {len(onde) - 3}" if len(onde) > 3 else "")
+        partes = urllib.parse.urlsplit(url)
+        if partes.scheme not in ("http", "https") or partes.netloc not in SERVIDORES_DOS_LINKS:
+            r.erros.append(f"Link para servidor fora da lista conferida (não foi aberto): "
+                           f"{texto_seguro(url)} — em {lugares}. Confira na mão e, se estiver "
+                           "certo, acrescente o servidor em SERVIDORES_DOS_LINKS.")
+            continue
+        # Regra mais estreita para url_fonte: só os três servidores de dados oficiais
+        if any(o.endswith("(url_fonte)") for o in onde) and (
+                partes.scheme != "https" or partes.netloc not in SERVIDORES_DAS_FONTES):
+            r.erros.append(f"url_fonte não aponta para uma das fontes oficiais (https): "
+                           f"{texto_seguro(url)} — em {lugares}.")
+            continue
+        porta = 443 if partes.scheme == "https" else 80
+        servidores[partes.netloc] = min(porta, servidores.get(partes.netloc, porta), key=lambda p: p != 443)
+        codigo, motivo = abrir_link(url)
+        if codigo is not None and 200 <= codigo < 300:
+            bons += 1
+        elif codigo == 403 and partes.netloc in BLOQUEIAM_ROBOS:
+            r.ok.append(f"Não testável por robô (o site recusa acessos automáticos, HTTP 403); "
+                        f"abra no navegador de vez em quando: {url}")
+        else:
+            r.erros.append(f"Link quebrado ({f'HTTP {codigo}' if codigo else motivo}): {url} — em {lugares}.")
+    for servidor, porta in sorted(servidores.items()):
+        todos, fora = enderecos_sem_resposta(servidor, porta)
+        if fora:
+            r.avisos.append(f"{servidor} aponta para {len(todos)} servidor(es) e {len(fora)} não "
+                            f"responde(m) ({', '.join(fora)}). Quem cair nele vê demora ou falha "
+                            "de conexão. O problema é do site da fonte, não do painel.")
+    r.ok.append(f"{bons} de {len(links)} links responderam (em data/*.json, index.html e painel.js).")
 
 
 # ---------------------------------------------------------------------------
@@ -608,13 +724,15 @@ def main():
             dados_ok = [d for d in json_.get("dados") or [] if isinstance(d, dict) and "data" in d
                         and isinstance(d.get("valor"), (int, float))]
             checar_valores(ind, dados_ok, r, sorteio)
-            checar_link(json_, r)
 
     pagina = Resultado("Página (data/, coletar.py e painel.js)")
     checar_pagina(args.raiz, indicadores, pagina)
     mandatos = Resultado("Mandatos (data/mandatos.json)")
     checar_mandatos(args.raiz, mandatos, hoje)
-    resultados += [pagina, mandatos]
+    print("Verificando os links da página...", flush=True)
+    links = Resultado("Links da página")
+    checar_links(args.raiz, links)
+    resultados += [pagina, mandatos, links]
 
     print(texto(resultados))
     erros = sum(len(r.erros) for r in resultados)

@@ -27,6 +27,7 @@
   - **TSE (fonte do 4º mandato):** HTTP 403 "Access Denied" (proteção Akamai) para robôs e também para o navegador sem janela. Num navegador normal costuma abrir, mas não consegui provar.
   - **`https://www3.bcb.gov.br/sgspub/` (página do IPCA e rodapé):** abre, mas é a tela inicial do SGS, não a ficha da série 433 (a 433 não tem ficha no catálogo de dados abertos).
   - `https://sidra.ibge.gov.br/` (só no README): página de verificação "Um momento…" do Cloudflare para robôs.
+- **Verificador testa todos os links da página (17/11/2026).** Nova parte "Links da página" em `scripts/verificar.py`: junta os links de `data/*.json`, `index.html` e `painel.js`, abre cada um (duas tentativas), e testa cada endereço dos servidores. Link quebrado ou para servidor fora da lista = erro (a execução fica vermelha e o GitHub avisa por e-mail); servidor com endereço sem resposta = aviso; TSE (403 para robôs) fica anotado como não testável. Falhas provocadas numa cópia, todas detectadas: página 404 no BCB, 404 no GitHub, servidor desconhecido, porta estranha, url_fonte fora das fontes oficiais e conexão sem resposta.
 
 ## Roteiro de fases
 Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arquivo atualizado.
@@ -39,7 +40,7 @@ Cada fase termina com testes, commit, push (regra 8 do `CLAUDE.md`) e este arqui
 - **Fase 6 — Comparação entre mandatos e presidentes (futura):** seletor para alternar e comparar mandatos de vários presidentes, com as mesmas métricas e a mesma janela de tempo. Exige estender a coleta para antes de 2023 (atenção ao limite de 10 anos das séries diárias do SGS). Começar só depois da Fase 3 completa.
 
 ## Pendências abertas (A conferir — só o usuário pode fazer)
-- [ ] **Qual link deu "falha na requisição" em 15/11 à noite?** O teste de 17/11 apontou o Ipeadata (um servidor fora do ar) como causa mais provável. Se foi outro, diga qual. Decida também se quer trocar a fonte do 4º mandato (TSE bloqueia robôs) e se quer que o verificador semanal passe a testar todos os links da página.
+- [ ] **Link do TSE (4º mandato):** o verificador não consegue testá-lo (o site recusa robôs). Abra-o no navegador de vez em quando. (Decisão do usuário em 17/11: manter o link; o usuário não sabe qual link falhou em 15/11, e a causa mais provável é o servidor do Ipeadata.)
 - [ ] **Teste de 7 dias da rotina agendada (de 11/11 a 17/11/2026).** 1ª execução por `schedule`: 11/11, iniciou 19:29 UTC (atraso de ~7h30 do GitHub em relação às 12:00), sucesso. Confira em https://github.com/thierry62009/dashboard-governo/actions
 - [ ] Texto de citação exigido pelo BCB para a ODbL: https://dadosabertos.bcb.gov.br/
 - [ ] Comparar valores do gráfico com o SGS (fev/2025 = 1,31; ago/2026 = −0,32): https://www3.bcb.gov.br/sgspub/
