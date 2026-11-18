@@ -252,7 +252,7 @@ def checar_metadados(ind, r):
                 r.erros.append(f"Variável {ind['variavel']} não existe na tabela {ind['tabela']} do IBGE.")
                 return
             nome, unidade, per = var[0]["nome"], var[0]["unidade"], m["periodicidade"]["frequencia"]
-            r.ok.append(f"Tabela oficial: {m['nome']} (pesquisa: {m['pesquisa']}).")
+            r.ok.append(f"Tabela oficial: {texto_seguro(m['nome'])} (pesquisa: {texto_seguro(m['pesquisa'])}).")
             if ind.get("variavel_nome") and ind["variavel_nome"] != nome:
                 r.erros.append(f"Nome da variável que o coletor exige ({ind['variavel_nome']!r}) "
                                f"difere do oficial ({nome!r}): a coleta vai recusar os dados.")
@@ -263,10 +263,10 @@ def checar_metadados(ind, r):
                 if not c:
                     r.erros.append(f"Classificação {cls} não existe na tabela {ind['tabela']}.")
                 elif not [x for x in c[0]["categorias"] if str(x["id"]) == cat]:
-                    r.erros.append(f"Categoria {cat} não existe na classificação {cls} ({c[0]['nome']}).")
+                    r.erros.append(f"Categoria {cat} não existe na classificação {cls} ({texto_seguro(c[0]['nome'])}).")
                 else:
                     nome_cat = [x for x in c[0]["categorias"] if str(x["id"]) == cat][0]["nome"]
-                    r.ok.append(f"Filtro {cls}/{cat} = {c[0]['nome']}: {nome_cat}.")
+                    r.ok.append(f"Filtro {cls}/{cat} = {texto_seguro(c[0]['nome'])}: {texto_seguro(nome_cat)}.")
         else:  # ipea
             v = baixar(METADADOS_IPEA.format(codigo=urllib.parse.quote(ind["codigo"])))["value"]
             if not v:
@@ -274,7 +274,7 @@ def checar_metadados(ind, r):
                 return
             nome, unidade, per = v[0]["SERNOME"], v[0]["UNINOME"], v[0]["PERNOME"]
             if v[0].get("SERSTATUS") != "A":
-                r.avisos.append(f"Ipeadata marca a série como inativa (SERSTATUS={v[0].get('SERSTATUS')}).")
+                r.avisos.append(f"Ipeadata marca a série como inativa (SERSTATUS={texto_seguro(v[0].get('SERSTATUS'))}).")
     except ErroDeRede as e:
         r.avisos.append(f"Metadados não conferidos: a rede falhou ({e}).")
         return
@@ -650,7 +650,9 @@ def texto(resultados):
         for rotulo, itens in (("ERROS", r.erros), ("AVISOS", r.avisos), ("OK", r.ok)):
             if itens:
                 linhas.append(f"  {rotulo}:")
-                linhas += [f"    - {x}" for x in itens]
+                # Mensagens podem conter texto vindo das fontes (nomes, unidades):
+                # passam por texto_seguro para não virar comando do GitHub Actions.
+                linhas += [f"    - {texto_seguro(x, 2000)}" for x in itens]
     return "\n".join(linhas)
 
 
