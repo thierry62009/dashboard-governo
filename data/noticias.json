@@ -1,0 +1,43 @@
+{
+  "gerado_em": "2026-11-18T18:41:01-03:00",
+  "n_por_fonte": 5,
+  "fontes": [
+    {
+      "id": "agencia_brasil",
+      "veiculo": "Agência Brasil (EBC)",
+      "selo": "Oficial",
+      "url_feed": "https://agenciabrasil.ebc.com.br/rss/politica/feed.xml",
+      "termos": "Reprodução autorizada mediante indicação da fonte (EBC)",
+      "url_termos": "https://agenciabrasil.ebc.com.br/sobre",
+      "situacao": "ok",
+      "extraido_em": "2026-11-18T18:41:01-03:00",
+      "itens": [
+        {
+          "titulo": "Na FAO, Wellington Dias celebra avanços no combate à fome",
+          "data": "2026-11-18T15:40:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/na-fao-wellington-dias-celebra-avancos-no-combate-fome"
+        },
+        {
+          "titulo": "CCJ do Senado eleva pena para motorista que mata sob álcool ou drogas",
+          "data": "2026-11-18T11:12:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/ccj-do-senado-eleva-pena-para-motorista-que-mata-sob-alcool-ou-drogas"
+        },
+        {
+          "titulo": "Senado adia votação de destaques do projeto de ajuste fiscal",
+          "data": "2026-11-17T19:23:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/senado-adia-votacao-de-destaques-do-projeto-de-ajuste-fiscal"
+        },
+        {
+          "titulo": "Decreto que regulamenta escala 5x2 será assinado na quinta-feira",
+          "data": "2026-11-17T18:54:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/decreto-que-regulamenta-escala-5x2-sera-assinado-quinta-feira"
+        },
+        {
+          "titulo": "Congresso pede que STF julgue lei que beneficia condenados pelo 8/1",
+          "data": "2026-11-17T16:26:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/congresso-pede-que-stf-julgue-lei-que-beneficia-condenados-pelo-81"
+        }
+      ]
+    }
+  ]
+}
