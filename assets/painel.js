@@ -455,6 +455,64 @@ window.addEventListener("resize", () => {
   window.__espera = setTimeout(desenharGrade, 150);
 });
 
+/* ---------- Notícias (data/noticias.json) ---------- */
+
+// "2026-11-18T18:33:16-03:00" -> "18/11"
+function diaMes(iso) {
+  return new Date(iso).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo", day: "2-digit", month: "2-digit" });
+}
+
+// Um bloco por fonte: selo, título (link), veículo e data de cada item.
+// Tudo entra por textContent (função criar) e pela função link: o título vem
+// de fora e nunca é lido como HTML.
+function blocoDeNoticias(fonte) {
+  const bloco = criar("div", "bloco-noticias");
+  bloco.append(criar("h3", "", fonte.veiculo));
+
+  // "indisponivel" (ou qualquer valor desconhecido): sem itens
+  const situacao = ["ok", "desatualizado"].includes(fonte.situacao) ? fonte.situacao : "indisponivel";
+  const itens = Array.isArray(fonte.itens) ? fonte.itens : [];
+  if (situacao === "indisponivel" || !itens.length) {
+    bloco.append(criar("p", "noticia-situacao", "Indisponível."));
+  } else {
+    if (situacao === "desatualizado") {
+      bloco.append(criar("p", "noticia-situacao", "Não atualizado desde " + diaMes(fonte.extraido_em) + "."));
+    }
+    const lista = criar("ul", "noticias");
+    for (const item of itens) {
+      const li = criar("li", "noticia");
+      const titulo = link(String(item.titulo), item.link);
+      if (titulo.classList) titulo.classList.add("noticia-titulo");
+      const meta = criar("p", "noticia-meta");
+      meta.append(criar("span", "selo-tipo", fonte.selo), fonte.veiculo + " · " + dataHora(item.data));
+      li.append(titulo, meta);
+      lista.append(li);
+    }
+    bloco.append(lista);
+  }
+
+  // Origem: extração (vinda do JSON), feed e termos de uso da fonte
+  const origem = criar("p", "fonte-linha");
+  origem.append(
+    fonte.extraido_em ? "Extraído em " + dataHora(fonte.extraido_em) + " · " : "",
+    link("feed RSS", fonte.url_feed), " · ",
+    "uso: ", link(fonte.termos, fonte.url_termos)
+  );
+  bloco.append(origem);
+  return bloco;
+}
+
+async function desenharNoticias() {
+  const caixa = document.getElementById("blocos-noticias");
+  try {
+    const json = await baixarJson("data/noticias.json");
+    for (const fonte of json.fontes) caixa.append(blocoDeNoticias(fonte));
+  } catch (erro) {
+    // Falha nas notícias nunca afeta os indicadores
+    caixa.append(criar("p", "noticia-situacao", "Notícias indisponíveis no momento (" + erro.message + ")."));
+  }
+}
+
 /* ---------- Início: baixa os JSON e preenche a página ---------- */
 
 async function baixarJson(arquivo) {
@@ -472,6 +530,7 @@ function avisar(texto) {
 async function iniciar() {
   ligarBotoesDePeriodo();
   ligarAbas();
+  desenharNoticias();   // em paralelo; não espera nem depende dos indicadores
 
   // 1) Mandatos: escolhe o que está em andamento. Se o arquivo falhar,
   //    a página mostra todos os dados, sem filtro, e avisa.

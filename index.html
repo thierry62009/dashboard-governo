@@ -79,15 +79,19 @@
       <p class="aviso" id="aviso-erro" role="alert" hidden></p>
     </section>
 
-    <!-- 5. NOTÍCIAS (estrutura pronta, ainda sem dados) -->
+    <!-- 5. NOTÍCIAS (preenchida pelo painel.js a partir de data/noticias.json) -->
     <section class="secao limite" id="noticias" aria-labelledby="titulo-noticias">
       <div class="secao-topo">
         <h2 id="titulo-noticias">Notícias</h2>
-        <span class="em-breve">Em breve</span>
       </div>
-      <p class="secundario">Títulos com veículo, data e link, de fontes oficiais e de veículos
-        de imprensa variados. Cada item terá um selo "Oficial" ou "Imprensa".</p>
-      <ul class="noticias" id="lista-noticias"></ul>
+      <p class="secundario">Só título, veículo, data e link, sem o texto das matérias. De cada
+        fonte aparecem os itens mais recentes, em ordem de data, sem escolha de assunto.
+        Cada item tem um selo: "Oficial" (órgão público) ou "Imprensa" (veículo de imprensa).</p>
+      <div id="blocos-noticias"></div>
+      <div class="bloco-noticias">
+        <h3>Imprensa</h3>
+        <p class="secundario">Imprensa: em breve.</p>
+      </div>
     </section>
 
     <!-- 6. RESUMO DO PERÍODO (abas prontas, ainda sem texto) -->

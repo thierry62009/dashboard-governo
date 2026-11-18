@@ -82,6 +82,11 @@ Projeto de aprendizado.
 - Código inexistente **não dá erro**: vem HTTP 200 com lista vazia. A resposta começa com uma marca invisível (BOM): leia como `utf-8-sig`.
 - O nome `www.ipeadata.gov.br` aponta para **dois servidores**, e um deles (177.15.137.13, visto em 17/11/2026) não responde: quem cair nele espera ~40 s ou recebe falha de conexão. Não é erro do painel; use tempo-limite e novas tentativas.
 
+## Cuidados com os RSS de notícias
+- A Agência Brasil responde **HTTP 500** a qualquer User-Agent que contenha "python" (o padrão do urllib): use `painel-indicadores/1.0`.
+- O RSS do Planalto é RSS 1.0 (RDF), embora o servidor o declare como Atom; os itens não vêm em ordem de data e incluem pastas (ex.: "2023") que não são notícias.
+- Os feeds trazem resumo (`description`): ele é sempre descartado.
+
 ## Decisões já tomadas
 - **Hospedagem:** GitHub Pages no modo "GitHub Actions" (não "deploy from branch"). O site publicado contém só `index.html`, `assets/` e `data/`; `scripts/` e `.github/` não ficam públicos.
 - **Verificador:** `scripts/verificar.py` lê a lista de `scripts/coletar.py` (fonte única dos códigos) e confere metadados oficiais, 3 valores por série (por um endereço diferente do da coleta), atualização, esquema dos JSON, consistência com `painel.js` e `mandatos.json`, e se **todos os links da página** abrem (os de `data/*.json`, `index.html` e `painel.js`; só servidores da lista `SERVIDORES_DOS_LINKS`; link quebrado é erro; servidor com endereço morto é aviso; o TSE recusa robôs e fica de fora). Só aponta: nunca corrige nem grava em `data/` ou `assets/`. Sai com código 1 se houver erro. Roda toda segunda às 12:00 de Brasília por `.github/workflows/verificar.yml` (só leitura, sem commit) e pelo botão manual.
@@ -143,12 +148,14 @@ Projeto de aprendizado.
   - `aria-label` nos gráficos e tabela com os mesmos números;
   - foco visível;
   - funciona de 360 a 1440 px sem rolagem lateral.
+- **Notícias:** `scripts/noticias.py` (lista `FONTES`, um bloco por fonte) grava `data/noticias.json` com `gerado_em`, `n_por_fonte` e, por fonte, `id`, `veiculo`, `selo` (`Oficial` ou `Imprensa`), `url_feed`, `termos`, `url_termos`, `situacao` (`ok`, `desatualizado` ou `indisponivel`), `extraido_em` (última coleta boa) e `itens` (só `titulo`, `data` ISO com fuso e `link`). Os 5 mais recentes por fonte, por data, sem filtro nem ranking. Recusa DTD, limite de 2 MB, título acima de 300 caracteres descartado (nunca cortado), link só https do domínio da fonte, sem data futura. No workflow, o passo "Coletar notícias" tem `continue-on-error`.
 - **Gráficos:** sempre colunas a partir do zero (não exagera variações e aceita valores negativos), em todos os indicadores.
 
 ## Como rodar localmente
 ```
 python3 scripts/coletar.py        # atualiza todos os data/*.json (descarte antes do commit)
 python3 scripts/coletar.py selic  # só os indicadores citados
+python3 scripts/noticias.py       # atualiza data/noticias.json (descarte antes do commit)
 python3 scripts/verificar.py      # confere tudo com as fontes oficiais (só aponta; não grava nada)
 python3 -m http.server 8000       # abra http://localhost:8000
 ```

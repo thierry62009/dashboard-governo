@@ -38,6 +38,14 @@ jobs:
         # e o site continua com os dados de ontem.
         run: python scripts/coletar.py
 
+      - name: Coletar notícias
+        # Falha isolada: se este passo der erro, a execução segue normalmente
+        # (indicadores gravados e site publicado). Um feed que falhe mantém os
+        # itens da última coleta boa, e a página mostra "não atualizado desde".
+        continue-on-error: true
+        timeout-minutes: 5
+        run: python scripts/noticias.py
+
       - name: Gravar o resultado no repositório
         # Grava todo dia (a data de extração sempre muda). Isso também
         # mantém o repositório "ativo", e o GitHub não desliga o agendamento.

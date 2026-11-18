@@ -24,7 +24,9 @@ O que é checado:
   d) esquema do JSON (campos, tipos, ordem dos meses, fonte, link, licença);
   e) consistência entre data/*.json, scripts/coletar.py e assets/painel.js,
      e se todos os links que o leitor pode clicar respondem (seção "Links da página");
-  f) data/mandatos.json (datas, sobreposição, status coerente com hoje).
+  f) data/mandatos.json (datas, sobreposição, status coerente com hoje);
+  g) data/noticias.json (esquema, títulos, datas e formato dos links; os links
+     das matérias não são abertos, porque mudam todo dia).
 
 Usa só a biblioteca padrão do Python.
 """
@@ -437,7 +439,7 @@ def checar_pagina(raiz, indicadores, r):
     painel = open(os.path.join(raiz, "assets", "painel.js"), encoding="utf-8").read()
     no_painel = set(re.findall(r'arquivo:\s*"data/([\w-]+)\.json"', painel))
     em_data = {f[:-5] for f in os.listdir(os.path.join(raiz, "data"))
-               if f.endswith(".json") and f != "mandatos.json"}
+               if f.endswith(".json") and f not in ("mandatos.json", "noticias.json")}
     no_coletor = {ind["id"] for ind in indicadores}
     for nome in sorted(em_data - no_painel):
         r.erros.append(f"data/{nome}.json existe mas não está na lista INDICADORES do painel.js.")
@@ -677,6 +679,139 @@ def markdown(resultados, hoje):
     return "\n".join(md) + "\n"
 
 
+# ---------------------------------------------------------------------------
+# g) Notícias
+# ---------------------------------------------------------------------------
+SELOS = {"Oficial", "Imprensa"}
+SITUACOES_NOTICIAS = {"ok", "desatualizado", "indisponivel"}
+
+
+def carregar_fontes_de_noticias(raiz):
+    """Lê a lista FONTES de scripts/noticias.py (domínios permitidos de cada fonte)."""
+    pasta = os.path.join(raiz, "scripts")
+    sys.path.insert(0, pasta)        # noticias.py importa funções do coletar.py
+    try:
+        spec = importlib.util.spec_from_file_location("noticias_verificado", os.path.join(pasta, "noticias.py"))
+        modulo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modulo)   # só define funções e listas; não baixa nada
+        return {f["id"]: f for f in modulo.FONTES}, modulo.N_POR_FONTE, modulo.LIMITE_TITULO
+    finally:
+        sys.path.remove(pasta)
+
+
+def data_iso_com_fuso(x):
+    """Devolve o datetime se x for data ISO com fuso; senão None."""
+    if not isinstance(x, str):
+        return None
+    try:
+        d = datetime.fromisoformat(x)
+    except ValueError:
+        return None
+    return d if d.tzinfo else None
+
+
+def link_https_de(url, dominios):
+    if not isinstance(url, str) or not url.startswith("https://") or len(url) > 500:
+        return False
+    if any(c.isspace() or ord(c) < 32 for c in url):
+        return False
+    partes = urllib.parse.urlsplit(url)
+    return partes.scheme == "https" and (dominios is None or partes.netloc in dominios)
+
+
+def checar_noticias(raiz, r, agora):
+    caminho = os.path.join(raiz, "data", "noticias.json")
+    if not os.path.exists(caminho):
+        r.avisos.append("data/noticias.json não existe (o robô ainda não rodou a coleta de notícias?).")
+        return
+    try:
+        j = json.load(open(caminho, encoding="utf-8"))
+        fontes_cfg, n_max, limite_titulo = carregar_fontes_de_noticias(raiz)
+    except Exception as e:
+        r.erros.append(f"data/noticias.json ou scripts/noticias.py ilegível: {texto_seguro(e)}")
+        return
+    if not isinstance(j, dict) or not isinstance(j.get("fontes"), list):
+        r.erros.append("data/noticias.json: falta a lista 'fontes'.")
+        return
+    if not data_iso_com_fuso(j.get("gerado_em")):
+        r.erros.append(f"gerado_em ausente ou fora do formato ISO com fuso: {j.get('gerado_em')!r}.")
+    if j.get("n_por_fonte") != n_max:
+        r.erros.append(f"n_por_fonte = {j.get('n_por_fonte')!r}, mas scripts/noticias.py usa {n_max}.")
+
+    ids = [f.get("id") for f in j["fontes"] if isinstance(f, dict)]
+    for falta in sorted(set(fontes_cfg) - set(ids)):
+        r.erros.append(f"A fonte {falta!r} está em scripts/noticias.py mas não em data/noticias.json.")
+    for sobra in sorted(set(ids) - set(fontes_cfg), key=str):
+        r.erros.append(f"A fonte {sobra!r} está em data/noticias.json mas não em scripts/noticias.py.")
+
+    for f in j["fontes"]:
+        if not isinstance(f, dict):
+            r.erros.append("data/noticias.json: uma fonte não é um objeto.")
+            continue
+        nome = f"Notícias {f.get('id')!r}"
+        cfg = fontes_cfg.get(f.get("id"))
+        dominios = set(cfg["dominios"]) if cfg else None
+        for campo in ("veiculo", "termos"):
+            if not isinstance(f.get(campo), str) or not f[campo].strip():
+                r.erros.append(f"{nome}: campo {campo} ausente ou vazio.")
+        if f.get("selo") not in SELOS:
+            r.erros.append(f"{nome}: selo inválido {f.get('selo')!r} (use Oficial ou Imprensa).")
+        for campo in ("url_feed", "url_termos"):
+            if not link_https_de(f.get(campo), None):
+                r.erros.append(f"{nome}: {campo} não é um link https: {f.get(campo)!r}.")
+        situacao = f.get("situacao")
+        if situacao not in SITUACOES_NOTICIAS:
+            r.erros.append(f"{nome}: situacao inválida {situacao!r}.")
+        extraido = data_iso_com_fuso(f.get("extraido_em"))
+        if f.get("extraido_em") is not None and not extraido:
+            r.erros.append(f"{nome}: extraido_em fora do formato ISO com fuso: {f.get('extraido_em')!r}.")
+        if situacao in ("ok", "desatualizado") and not extraido:
+            r.erros.append(f"{nome}: situacao {situacao!r} exige extraido_em.")
+
+        itens = f.get("itens")
+        if not isinstance(itens, list):
+            r.erros.append(f"{nome}: falta a lista 'itens'.")
+            continue
+        if situacao == "indisponivel" and itens:
+            r.erros.append(f"{nome}: fonte indisponível não pode ter itens.")
+        if situacao in ("ok", "desatualizado") and not itens:
+            r.erros.append(f"{nome}: situacao {situacao!r} sem nenhum item.")
+        if len(itens) > n_max:
+            r.erros.append(f"{nome}: {len(itens)} itens (o máximo é {n_max}).")
+        datas, links = [], set()
+        for i, it in enumerate(itens):
+            if not isinstance(it, dict) or set(it) != {"titulo", "data", "link"}:
+                r.erros.append(f"{nome}: item {i} deve ter só titulo, data e link.")
+                continue
+            titulo = it["titulo"]
+            if not isinstance(titulo, str) or not titulo.strip() or len(titulo) > limite_titulo:
+                r.erros.append(f"{nome}: item {i} com título vazio ou com mais de {limite_titulo} caracteres.")
+            d = data_iso_com_fuso(it["data"])
+            if not d:
+                r.erros.append(f"{nome}: item {i} com data fora do formato ISO com fuso: {it['data']!r}.")
+            elif d > agora + timedelta(minutes=10):
+                r.erros.append(f"{nome}: item {i} com data no futuro ({it['data']}).")
+            else:
+                datas.append(d)
+            if not link_https_de(it["link"], dominios):
+                r.erros.append(f"{nome}: item {i} com link que não é https do domínio da fonte: {it['link']!r}.")
+            if it["link"] in links:
+                r.erros.append(f"{nome}: item {i} repete um link.")
+            links.add(it["link"])
+        if datas != sorted(datas, reverse=True):
+            r.erros.append(f"{nome}: itens fora da ordem de data (do mais novo para o mais antigo).")
+
+        if situacao == "ok" and extraido and agora - extraido > timedelta(days=2):
+            r.avisos.append(f"{nome}: extraído em {f.get('extraido_em')} (mais de 2 dias): a rotina diária parou?")
+        elif situacao == "desatualizado":
+            r.avisos.append(f"{nome}: feed falhou; a página mostra os itens de {f.get('extraido_em')} "
+                            "com 'não atualizado desde'.")
+        elif situacao == "indisponivel":
+            r.avisos.append(f"{nome}: sem coleta boa há mais de 7 dias; a página mostra 'Indisponível'.")
+        else:
+            r.ok.append(f"{nome}: {len(itens)} itens, extraídos em {f.get('extraido_em')}.")
+
+
 def carregar_coletor(raiz):
     """Lê a lista INDICADORES de scripts/coletar.py (fonte única dos códigos)."""
     caminho = os.path.join(raiz, "scripts", "coletar.py")
@@ -731,10 +866,12 @@ def main():
     checar_pagina(args.raiz, indicadores, pagina)
     mandatos = Resultado("Mandatos (data/mandatos.json)")
     checar_mandatos(args.raiz, mandatos, hoje)
+    noticias = Resultado("Notícias (data/noticias.json)")
+    checar_noticias(args.raiz, noticias, datetime.now(FUSO))
     print("Verificando os links da página...", flush=True)
     links = Resultado("Links da página")
     checar_links(args.raiz, links)
-    resultados += [pagina, mandatos, links]
+    resultados += [pagina, mandatos, noticias, links]
 
     print(texto(resultados))
     erros = sum(len(r.erros) for r in resultados)
