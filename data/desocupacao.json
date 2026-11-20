@@ -14,7 +14,7 @@
     "url_pagina": "https://sidra.ibge.gov.br/tabela/6381",
     "observacao": "Cada ponto se refere a um trimestre móvel: três meses seguidos, terminados no mês indicado. Os pontos de janeiro e fevereiro de 2023 incluem meses de 2022, porque cada ponto cobre três meses."
   },
-  "extraido_em": "2026-11-19T17:25:45-03:00",
+  "extraido_em": "2026-11-20T16:56:46-03:00",
   "dados": [
     {
       "data": "2023-01",
