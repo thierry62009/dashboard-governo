@@ -10,11 +10,11 @@
     "fonte_sigla": "BCB/SGS",
     "licenca": "ODbL (Open Database License) - exige citação da fonte",
     "url_licenca": "https://opendatacommons.org/licenses/odbl/",
-    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.1/dados?formato=json&dataInicial=01/01/2023&dataFinal=20/11/2026",
+    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.1/dados?formato=json&dataInicial=01/01/2023&dataFinal=21/11/2026",
     "url_pagina": "https://dadosabertos.bcb.gov.br/dataset/1-taxa-de-cambio---livre---dolar-americano-venda---diario",
     "observacao": "Série diária: o gráfico mostra o valor do último dia disponível de cada mês."
   },
-  "extraido_em": "2026-11-20T16:56:43-03:00",
+  "extraido_em": "2026-11-21T16:01:59-03:00",
   "dados": [
     {
       "data": "2023-01",
