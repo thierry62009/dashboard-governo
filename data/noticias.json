@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-21T16:02:08-03:00",
+  "gerado_em": "2026-11-22T16:26:19-03:00",
   "n_por_fonte": 5,
   "fontes": [
     {
@@ -10,8 +10,13 @@
       "termos": "Reprodução autorizada mediante indicação da fonte (EBC)",
       "url_termos": "https://agenciabrasil.ebc.com.br/sobre",
       "situacao": "ok",
-      "extraido_em": "2026-11-21T16:02:08-03:00",
+      "extraido_em": "2026-11-22T16:26:19-03:00",
       "itens": [
+        {
+          "titulo": "Bolsonaro segue internado na UTI sem previsão de alta",
+          "data": "2026-11-22T14:55:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/bolsonaro-segue-internado-na-uti-sem-previsao-de-alta"
+        },
         {
           "titulo": "Ex-presidente Jair Bolsonaro está internado em UTI no Distrito Federal",
           "data": "2026-11-21T14:55:00-03:00",
@@ -31,11 +36,6 @@
           "titulo": "Bolsonaro é internado com quadro de dor e distensão abdominal",
           "data": "2026-11-20T18:12:00-03:00",
           "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/bolsonaro-e-internado-com-quadro-de-dor-e-distens%C3%A3o-abdominal"
-        },
-        {
-          "titulo": "Lula: transporte gratuito no fim de semana complementaria escala 5x2",
-          "data": "2026-11-19T14:43:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/lula-transporte-gratuito-no-fim-de-semana-complementaria-escala-5x2"
         }
       ]
     }
