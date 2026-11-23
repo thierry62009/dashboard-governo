@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-22T16:26:19-03:00",
+  "gerado_em": "2026-11-23T20:44:58-03:00",
   "n_por_fonte": 5,
   "fontes": [
     {
@@ -10,8 +10,18 @@
       "termos": "Reprodução autorizada mediante indicação da fonte (EBC)",
       "url_termos": "https://agenciabrasil.ebc.com.br/sobre",
       "situacao": "ok",
-      "extraido_em": "2026-11-22T16:26:19-03:00",
+      "extraido_em": "2026-11-23T20:44:58-03:00",
       "itens": [
+        {
+          "titulo": "Câmara aprova urgência para votação do projeto de ajuste fiscal",
+          "data": "2026-11-23T19:59:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/camara-aprova-urgencia-para-votacao-do-projeto-de-ajuste-fiscal"
+        },
+        {
+          "titulo": "Deputada de SP tem entrada na Cisjordânia negada por governo de Israel",
+          "data": "2026-11-23T18:14:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/deputada-de-sp-tem-entrada-na-cisjordania-negada-por-governo-de-israel"
+        },
         {
           "titulo": "Bolsonaro segue internado na UTI sem previsão de alta",
           "data": "2026-11-22T14:55:00-03:00",
@@ -26,16 +36,6 @@
           "titulo": "\"O sistema financeiro não vai me ensinar a dirigir o Brasil\", diz Lula",
           "data": "2026-11-21T14:12:00-03:00",
           "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/o-sistema-financeiro-nao-vai-me-ensinar-dirigir-o-brasil-diz-lula"
-        },
-        {
-          "titulo": "Lula presta solidariedade à cidade gaúcha devastada por tempestade",
-          "data": "2026-11-21T12:20:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/lula-presta-solidariedade-cidade-gaucha-devastada-por-tempestade"
-        },
-        {
-          "titulo": "Bolsonaro é internado com quadro de dor e distensão abdominal",
-          "data": "2026-11-20T18:12:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/bolsonaro-e-internado-com-quadro-de-dor-e-distens%C3%A3o-abdominal"
         }
       ]
     }
