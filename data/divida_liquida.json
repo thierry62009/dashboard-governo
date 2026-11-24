@@ -10,10 +10,10 @@
     "fonte_sigla": "BCB/SGS",
     "licenca": "ODbL (Open Database License) - exige citação da fonte",
     "url_licenca": "https://opendatacommons.org/licenses/odbl/",
-    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.4513/dados?formato=json&dataInicial=01/01/2023&dataFinal=23/11/2026",
+    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.4513/dados?formato=json&dataInicial=01/01/2023&dataFinal=24/11/2026",
     "url_pagina": "https://dadosabertos.bcb.gov.br/dataset/4513-divida-liquida-do-setor-publico--pib---total---setor-publico-consolidado"
   },
-  "extraido_em": "2026-11-23T20:44:52-03:00",
+  "extraido_em": "2026-11-24T19:16:16-03:00",
   "dados": [
     {
       "data": "2023-01",

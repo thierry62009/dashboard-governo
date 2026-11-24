@@ -10,10 +10,10 @@
     "fonte_sigla": "BCB/SGS",
     "licenca": "ODbL (Open Database License) - exige citação da fonte",
     "url_licenca": "https://opendatacommons.org/licenses/odbl/",
-    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados?formato=json&dataInicial=01/01/2023&dataFinal=23/11/2026",
+    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados?formato=json&dataInicial=01/01/2023&dataFinal=24/11/2026",
     "url_pagina": "https://www3.bcb.gov.br/sgspub/"
   },
-  "extraido_em": "2026-11-23T20:44:43-03:00",
+  "extraido_em": "2026-11-24T19:16:10-03:00",
   "dados": [
     {
       "data": "2023-01",

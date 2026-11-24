@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-23T20:44:58-03:00",
+  "gerado_em": "2026-11-24T19:16:21-03:00",
   "n_por_fonte": 5,
   "fontes": [
     {
@@ -10,32 +10,32 @@
       "termos": "Reprodução autorizada mediante indicação da fonte (EBC)",
       "url_termos": "https://agenciabrasil.ebc.com.br/sobre",
       "situacao": "ok",
-      "extraido_em": "2026-11-23T20:44:58-03:00",
+      "extraido_em": "2026-11-24T19:16:21-03:00",
       "itens": [
         {
-          "titulo": "Câmara aprova urgência para votação do projeto de ajuste fiscal",
-          "data": "2026-11-23T19:59:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/camara-aprova-urgencia-para-votacao-do-projeto-de-ajuste-fiscal"
+          "titulo": "Lula sanciona ajuste fiscal aprovado no Congresso",
+          "data": "2026-11-24T17:25:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/lula-sanciona-ajuste-fiscal-aprovado-no-congresso"
         },
         {
-          "titulo": "Deputada de SP tem entrada na Cisjordânia negada por governo de Israel",
-          "data": "2026-11-23T18:14:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/deputada-de-sp-tem-entrada-na-cisjordania-negada-por-governo-de-israel"
+          "titulo": "Lula lamenta falta de acordo na COP31 e pede união pelo meio ambiente",
+          "data": "2026-11-24T15:23:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/lula-lamenta-falta-de-acordo-na-cop-31-e-pede-uniao-pelo-meio-ambiente"
         },
         {
-          "titulo": "Bolsonaro segue internado na UTI sem previsão de alta",
-          "data": "2026-11-22T14:55:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/bolsonaro-segue-internado-na-uti-sem-previsao-de-alta"
+          "titulo": "Câmara aprova ajuste fiscal sem alterações; projeto segue para sanção",
+          "data": "2026-11-24T08:22:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/camara-aprova-ajuste-fiscal-sem-alteracoes-projeto-segue-para-sancao"
         },
         {
-          "titulo": "Ex-presidente Jair Bolsonaro está internado em UTI no Distrito Federal",
-          "data": "2026-11-21T14:55:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/ex-presidente-jair-bolsonaro-esta-internado-em-uti-no-distrito-federal"
+          "titulo": "Inmet emite aviso de grande perigo para tempestades na Região Sul",
+          "data": "2026-11-24T08:04:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/inmet-emite-aviso-de-grande-perigo-para-tempestades-na-regiao-sul"
         },
         {
-          "titulo": "\"O sistema financeiro não vai me ensinar a dirigir o Brasil\", diz Lula",
-          "data": "2026-11-21T14:12:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/o-sistema-financeiro-nao-vai-me-ensinar-dirigir-o-brasil-diz-lula"
+          "titulo": "Câmara aprova texto-base do projeto de ajuste fiscal",
+          "data": "2026-11-23T22:44:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/camara-aprova-texto-base-do-projeto-de-ajuste-fiscal"
         }
       ]
     }
