@@ -10,11 +10,11 @@
     "fonte_sigla": "BCB/SGS",
     "licenca": "ODbL (Open Database License) - exige citação da fonte",
     "url_licenca": "https://opendatacommons.org/licenses/odbl/",
-    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.5793/dados?formato=json&dataInicial=01/01/2023&dataFinal=24/11/2026",
+    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.5793/dados?formato=json&dataInicial=01/01/2023&dataFinal=25/11/2026",
     "url_pagina": "https://dadosabertos.bcb.gov.br/dataset/5793-nfsp-sem-desvalorizacao-cambial--pib---fluxo-acumulado-em-12-meses---resultado-primario---tota",
     "observacao": "NFSP = necessidade de financiamento do setor público. Pela convenção do Banco Central, valor positivo indica déficit e valor negativo indica superávit."
   },
-  "extraido_em": "2026-11-24T19:16:17-03:00",
+  "extraido_em": "2026-11-25T18:34:13-03:00",
   "dados": [
     {
       "data": "2023-01",

@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-24T19:16:21-03:00",
+  "gerado_em": "2026-11-25T18:34:16-03:00",
   "n_por_fonte": 5,
   "fontes": [
     {
@@ -10,8 +10,23 @@
       "termos": "Reprodução autorizada mediante indicação da fonte (EBC)",
       "url_termos": "https://agenciabrasil.ebc.com.br/sobre",
       "situacao": "ok",
-      "extraido_em": "2026-11-24T19:16:21-03:00",
+      "extraido_em": "2026-11-25T18:34:16-03:00",
       "itens": [
+        {
+          "titulo": "CCJ do Senado aprova PEC sobre papel da União no financiamento do DF",
+          "data": "2026-11-25T13:09:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/ccj-do-senado-aprova-pec-sobre-papel-da-uniao-no-financiamento-do-df"
+        },
+        {
+          "titulo": "Efeito Americanas: CCJ do Senado tipifica crime de fraude contábil",
+          "data": "2026-11-25T10:39:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/efeito-americanas-ccj-do-senado-tipifica-crime-de-fraude-contabil"
+        },
+        {
+          "titulo": "Projeto de regulação das big techs será votado na próxima semana",
+          "data": "2026-11-24T20:23:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/projeto-de-regulacao-das-big-techs-sera-votado-na-proxima-semana"
+        },
         {
           "titulo": "Lula sanciona ajuste fiscal aprovado no Congresso",
           "data": "2026-11-24T17:25:00-03:00",
@@ -21,21 +36,6 @@
           "titulo": "Lula lamenta falta de acordo na COP31 e pede união pelo meio ambiente",
           "data": "2026-11-24T15:23:00-03:00",
           "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/lula-lamenta-falta-de-acordo-na-cop-31-e-pede-uniao-pelo-meio-ambiente"
-        },
-        {
-          "titulo": "Câmara aprova ajuste fiscal sem alterações; projeto segue para sanção",
-          "data": "2026-11-24T08:22:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/camara-aprova-ajuste-fiscal-sem-alteracoes-projeto-segue-para-sancao"
-        },
-        {
-          "titulo": "Inmet emite aviso de grande perigo para tempestades na Região Sul",
-          "data": "2026-11-24T08:04:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/inmet-emite-aviso-de-grande-perigo-para-tempestades-na-regiao-sul"
-        },
-        {
-          "titulo": "Câmara aprova texto-base do projeto de ajuste fiscal",
-          "data": "2026-11-23T22:44:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/camara-aprova-texto-base-do-projeto-de-ajuste-fiscal"
         }
       ]
     }

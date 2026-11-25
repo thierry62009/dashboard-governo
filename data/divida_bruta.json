@@ -10,10 +10,10 @@
     "fonte_sigla": "BCB/SGS",
     "licenca": "ODbL (Open Database License) - exige citação da fonte",
     "url_licenca": "https://opendatacommons.org/licenses/odbl/",
-    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.13762/dados?formato=json&dataInicial=01/01/2023&dataFinal=24/11/2026",
+    "url_fonte": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.13762/dados?formato=json&dataInicial=01/01/2023&dataFinal=25/11/2026",
     "url_pagina": "https://dadosabertos.bcb.gov.br/dataset/13762-divida-bruta-do-governo-geral--pib---metodologia-utilizada-a-partir-de-2008"
   },
-  "extraido_em": "2026-11-24T19:16:16-03:00",
+  "extraido_em": "2026-11-25T18:34:11-03:00",
   "dados": [
     {
       "data": "2023-01",
