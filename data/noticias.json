@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-25T18:34:16-03:00",
+  "gerado_em": "2026-11-26T18:22:12-03:00",
   "n_por_fonte": 5,
   "fontes": [
     {
@@ -10,8 +10,23 @@
       "termos": "Reprodução autorizada mediante indicação da fonte (EBC)",
       "url_termos": "https://agenciabrasil.ebc.com.br/sobre",
       "situacao": "ok",
-      "extraido_em": "2026-11-25T18:34:16-03:00",
+      "extraido_em": "2026-11-26T18:22:12-03:00",
       "itens": [
+        {
+          "titulo": "Lula e Cleitinho debatem negociação de dívida de Minas Gerais",
+          "data": "2026-11-26T17:31:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/lula-e-cleitinho-debatem-negociacao-de-divida-de-minas-gerais"
+        },
+        {
+          "titulo": "Com 40 anos na política, Benedita abriu caminhos para mulheres negras",
+          "data": "2026-11-26T15:44:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/com-40-anos-na-politica-benedita-abriu-caminhos-para-mulheres-negras"
+        },
+        {
+          "titulo": "Feijoada e peixe? Ministério quer ampliar consumo de pescado no país",
+          "data": "2026-11-26T15:39:00-03:00",
+          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/feijoada-e-peixe-ministerio-quer-ampliar-consumo-de-pescado-no-pais"
+        },
         {
           "titulo": "CCJ do Senado aprova PEC sobre papel da União no financiamento do DF",
           "data": "2026-11-25T13:09:00-03:00",
@@ -21,21 +36,6 @@
           "titulo": "Efeito Americanas: CCJ do Senado tipifica crime de fraude contábil",
           "data": "2026-11-25T10:39:00-03:00",
           "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/efeito-americanas-ccj-do-senado-tipifica-crime-de-fraude-contabil"
-        },
-        {
-          "titulo": "Projeto de regulação das big techs será votado na próxima semana",
-          "data": "2026-11-24T20:23:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/projeto-de-regulacao-das-big-techs-sera-votado-na-proxima-semana"
-        },
-        {
-          "titulo": "Lula sanciona ajuste fiscal aprovado no Congresso",
-          "data": "2026-11-24T17:25:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/lula-sanciona-ajuste-fiscal-aprovado-no-congresso"
-        },
-        {
-          "titulo": "Lula lamenta falta de acordo na COP31 e pede união pelo meio ambiente",
-          "data": "2026-11-24T15:23:00-03:00",
-          "link": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-11/lula-lamenta-falta-de-acordo-na-cop-31-e-pede-uniao-pelo-meio-ambiente"
         }
       ]
     }
