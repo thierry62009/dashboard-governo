@@ -14,187 +14,191 @@
     "url_pagina": "https://sidra.ibge.gov.br/tabela/6390",
     "observacao": "Trimestre móvel terminado no mês indicado. Rendimento real: o IBGE corrige os valores pela inflação, e a série inteira pode mudar a cada divulgação."
   },
-  "extraido_em": "2026-11-26T18:21:05-03:00",
+  "extraido_em": "2026-11-27T18:01:33-03:00",
   "dados": [
     {
       "data": "2023-01",
-      "valor": 3338.0
+      "valor": 3345.0
     },
     {
       "data": "2023-02",
-      "valor": 3336.0
-    },
-    {
-      "data": "2023-03",
-      "valor": 3344.0
-    },
-    {
-      "data": "2023-04",
-      "valor": 3334.0
-    },
-    {
-      "data": "2023-05",
-      "valor": 3328.0
-    },
-    {
-      "data": "2023-06",
       "valor": 3343.0
     },
     {
+      "data": "2023-03",
+      "valor": 3351.0
+    },
+    {
+      "data": "2023-04",
+      "valor": 3341.0
+    },
+    {
+      "data": "2023-05",
+      "valor": 3335.0
+    },
+    {
+      "data": "2023-06",
+      "valor": 3350.0
+    },
+    {
       "data": "2023-07",
-      "valor": 3355.0
+      "valor": 3362.0
     },
     {
       "data": "2023-08",
-      "valor": 3365.0
+      "valor": 3372.0
     },
     {
       "data": "2023-09",
-      "valor": 3398.0
+      "valor": 3405.0
     },
     {
       "data": "2023-10",
-      "valor": 3409.0
+      "valor": 3417.0
     },
     {
       "data": "2023-11",
-      "valor": 3439.0
+      "valor": 3446.0
     },
     {
       "data": "2023-12",
-      "valor": 3424.0
+      "valor": 3432.0
     },
     {
       "data": "2024-01",
-      "valor": 3462.0
+      "valor": 3470.0
     },
     {
       "data": "2024-02",
-      "valor": 3478.0
+      "valor": 3485.0
     },
     {
       "data": "2024-03",
-      "valor": 3475.0
+      "valor": 3482.0
     },
     {
       "data": "2024-04",
-      "valor": 3490.0
+      "valor": 3498.0
     },
     {
       "data": "2024-05",
-      "valor": 3511.0
+      "valor": 3519.0
     },
     {
       "data": "2024-06",
-      "valor": 3534.0
+      "valor": 3542.0
     },
     {
       "data": "2024-07",
-      "valor": 3514.0
-    },
-    {
-      "data": "2024-08",
-      "valor": 3532.0
-    },
-    {
-      "data": "2024-09",
       "valor": 3521.0
     },
     {
-      "data": "2024-10",
+      "data": "2024-08",
       "valor": 3540.0
     },
     {
+      "data": "2024-09",
+      "valor": 3528.0
+    },
+    {
+      "data": "2024-10",
+      "valor": 3547.0
+    },
+    {
       "data": "2024-11",
-      "valor": 3555.0
+      "valor": 3563.0
     },
     {
       "data": "2024-12",
-      "valor": 3570.0
+      "valor": 3577.0
     },
     {
       "data": "2025-01",
-      "valor": 3587.0
+      "valor": 3594.0
     },
     {
       "data": "2025-02",
-      "valor": 3601.0
+      "valor": 3608.0
     },
     {
       "data": "2025-03",
-      "valor": 3611.0
+      "valor": 3619.0
     },
     {
       "data": "2025-04",
-      "valor": 3599.0
+      "valor": 3607.0
     },
     {
       "data": "2025-05",
-      "valor": 3615.0
+      "valor": 3623.0
     },
     {
       "data": "2025-06",
-      "valor": 3650.0
+      "valor": 3657.0
     },
     {
       "data": "2025-07",
-      "valor": 3648.0
+      "valor": 3656.0
     },
     {
       "data": "2025-08",
-      "valor": 3648.0
+      "valor": 3655.0
     },
     {
       "data": "2025-09",
-      "valor": 3660.0
+      "valor": 3667.0
     },
     {
       "data": "2025-10",
-      "valor": 3676.0
+      "valor": 3684.0
     },
     {
       "data": "2025-11",
-      "valor": 3715.0
+      "valor": 3723.0
     },
     {
       "data": "2025-12",
-      "valor": 3749.0
+      "valor": 3757.0
     },
     {
       "data": "2026-01",
-      "valor": 3779.0
+      "valor": 3787.0
     },
     {
       "data": "2026-02",
-      "valor": 3790.0
+      "valor": 3798.0
     },
     {
       "data": "2026-03",
-      "valor": 3811.0
+      "valor": 3819.0
     },
     {
       "data": "2026-04",
-      "valor": 3792.0
+      "valor": 3800.0
     },
     {
       "data": "2026-05",
-      "valor": 3759.0
+      "valor": 3766.0
     },
     {
       "data": "2026-06",
-      "valor": 3753.0
+      "valor": 3761.0
     },
     {
       "data": "2026-07",
-      "valor": 3767.0
+      "valor": 3775.0
     },
     {
       "data": "2026-08",
-      "valor": 3784.0
+      "valor": 3792.0
     },
     {
       "data": "2026-09",
-      "valor": 3790.0
+      "valor": 3798.0
+    },
+    {
+      "data": "2026-10",
+      "valor": 3812.0
     }
   ]
 }
